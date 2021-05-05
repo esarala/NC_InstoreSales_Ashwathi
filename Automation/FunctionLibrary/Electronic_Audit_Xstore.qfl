@@ -1,0 +1,25 @@
+﻿Function Electronic_Audit()
+	'Set WshellOBJ = CreateObject("WScript.Shell")
+	'Set WshellD = CreateObject("WScript.Shell")
+	JavaWindow("Oracle Retail Xstore Point").JavaList("DtvList").PressKey "D"
+	Wait 2
+	JavaWindow("Oracle Retail Xstore Point").JavaButton("OK").Click
+	Wait 2
+	JavaWindow("Oracle Retail Xstore Point").JavaButton("Run Report").Click
+	'WshellOBJ.SendKeys"{F2}"
+	Wait 2
+	'JavaWindow("Oracle Retail Xstore Point").JavaList("items count:=1").Select "#0"
+	JavaWindow("Oracle Retail Xstore Point").JavaList("End #:").Select "#0"
+	Wait 3
+
+	If (JavaWindow("Oracle Retail Xstore Point").JavaButton("Reprint Receipt").Exist(2)) Then
+		JavaWindow("Oracle Retail Xstore Point").JavaButton("Reprint Receipt").Click
+		Reporter.ReportEvent micPass, "Receipt Printed","Test Passed"
+		Else
+		Reporter.ReportEvent micFail, "Receipt not printed","Test Failed"
+		wait 2
+	End If
+		
+End Function
+
+
