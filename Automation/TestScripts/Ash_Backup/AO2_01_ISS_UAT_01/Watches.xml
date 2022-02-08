@@ -1,0 +1,7 @@
+﻿<Properties>
+  <WatchEntry0 value="JavaWindow(&quot;Oracle Retail Xstore Point&quot;).JavaCheckBox(&quot;icon-checkbox_2&quot;).Highlight" />
+  <WatchEntry1 value="LoginType" />
+  <WatchEntry2 value="strXstoreUsername" />
+  <WatchEntry3 value="strXstorePassword" />
+  <WatchEntry4 value="DirPath" />
+</Properties>

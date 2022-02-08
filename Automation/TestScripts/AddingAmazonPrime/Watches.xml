@@ -1,0 +1,3 @@
+﻿<Properties>
+  <WatchEntry0 value="Browser(&quot;Browser&quot;).Page(&quot;Page&quot;).Frame(&quot;ePOSTab&amp;&amp;0Frame&quot;).WebButton(&quot;innertext:= Pick this extra, on us &quot;,&quot;Index:=2&quot;).highlight" />
+</Properties>

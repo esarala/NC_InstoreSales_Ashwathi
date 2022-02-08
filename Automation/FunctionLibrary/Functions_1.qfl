@@ -1,0 +1,1202 @@
+﻿'###################################################################################################################
+'Function Name: fnToAddInsurance
+'Function Description: To Select Amazon Prime in Build Your package screen
+'Designed By Date: Sukirdha 
+'Designed Date(MM/DD/YY): 06/24/2021
+'Modified By&date: When do some change need to update here
+'###################################################################################################################
+
+Function fnToAddInsurance()
+
+Set obj = createobject("Wscript.shell")
+wait 2
+If Browser("Browser").Page("Page").Frame("ePOSTab&&0Frame_2").WebElement("O2 Insure Full Cover").Exist(30) Then
+    Browser("Browser").Page("Page").Frame("ePOSTab&&0Frame_2").WebElement("O2 Insure Full Cover").HoverTap
+    wait 2
+    ' Browser("Browser").Page("Page").Frame("ePOSTab&&0Frame").WebElement("innertext:=Amazon Prime.*","index:=1").Click
+    Browser("Browser").Page("Page").Frame("ePOSTab&&0Frame_2").WebElement("innertext:=O2 Insure Full Cover.*","index:=1").Click
+End If
+Wait 2
+Browser("Browser").Page("Page").Frame("ePOSTab&&0Frame_2").WebElement("Add this insurance").Click
+Wait 2
+
+
+'If Browser("Browser").Page("Page").Frame("ePOSTab&&0Frame_2").WebElement("Add this insurance").Exist(30) Then
+'	Browser("Browser").Page("Page").Frame("ePOSTab&&0Frame_2").WebElement("O2 Insure Full Cover").Click
+'	Reporter.ReportEvent micPass,"Select O2 Insure Full Cover ","O2 Insure Full Cover is selected"
+'Else
+'	Reporter.ReportEvent micFail,"Select O2 Insure Full Cover","O2 Insure Full Cover is not found"
+'End  If	
+End Function
+
+'###################################################################################################################
+'Function Name: fnNewEPOSOrderFromCDRD
+'Function Description: To open up a new epos order in a different tab from CSRD
+'Designed By Date: Sukirdha 
+'Designed Date(MM/DD/YY): 06/29/2021
+'Modified By&date: When do some change need to update here
+'###################################################################################################################
+
+Function fnNewEPOSOrderFromCDRD()
+
+Set obj = createobject("Wscript.shell")
+wait 2	
+IF Browser("Browser").Page("Page").Frame("CSRDTab&&0Frame").WebButton("More Links").Exist(45) Then
+	Browser("Browser").Page("Page").Frame("CSRDTab&&0Frame").WebButton("More Links").Click
+Else 
+Reporter.ReportEvent micFail,"Verify if More Links exists in CSRD","More Links does not exists"
+End If
+Wait 4
+IF Browser("Browser").Page("Page").Frame("CSRDTab&&0Frame").WebElement("WebTable").Exist(10) Then
+ 	 Browser("Browser").Page("Page").Frame("CSRDTab&&0Frame").WebElement("innertext:= New ePOS Order.*","index:=1").Click
+Wait 10
+	IF Browser("Browser").Page("Page").WebElement("tab-1083-btnInnerEl").Exist(10) Then 
+		IF Browser("Browser").Page("Page").Frame("Frame_3").WebElement("Phones").Exist(20) Then
+		Reporter.ReportEvent micPass,"Verify if New EPOS Order is opened in a new tab","New EPOS Order is opened in a new tab"
+		Else 
+		Reporter.ReportEvent micFail,"Verify if New EPOS Order is opened in a new tab","New EPOS Order is not opened in a new tab"
+		End  If
+	End If
+End If 
+End Function
+
+
+'###################################################################################################################
+'Function Name: fnCloseEvolution
+'Function Description: To close evolution once the verification is over
+'Designed By Date: Sukirdha 
+'Designed Date(MM/DD/YY): 06/29/2021
+'Modified By&date: When do some change need to update here
+'###################################################################################################################
+Function fnCloseEvolution()
+
+	If Browser("Evolution").exist(2) Then
+		Browser("Evolution").Close
+		Reporter.ReportEvent micPass, "Evolution Closed", "Test Passed"
+		Else
+		Reporter.ReportEvent micFail, "Evolution still active", "Test Failed"
+	End  If
+	
+End Function
+
+'###################################################################################################################
+'Function Name: fnEvolutionLogin
+'Function Description: To close evolution once the verification is over
+'Designed By Date: Sukirdha 
+'Designed Date(MM/DD/YY): 06/29/2021
+'Modified By&date: When do some change need to update here
+'###################################################################################################################
+
+Function fnEvolutionLogin(strUsername,strPassword)
+Wait 3
+	Browser("Evolution").Page("Evolution").WebEdit("WebEdit").Set strUsername
+	Wait 5
+		Browser("Evolution").Page("Evolution").WebEdit("WebEdit_2").Set strPassword
+	Wait 5
+	If Browser("Evolution").Page("Evolution").WebElement("Login").Exist(3) Then
+		Browser("Evolution").Page("Evolution").WebElement("Login").Click
+		If Browser("Browser").Page("Evolution_2").WebElement("We didn't recognise your").Exist(10) Then
+		Reporter.ReportEvent micPass, "Evolution login with wrong password", "Appropriate Error Message is displayed"	
+		End If	
+		
+	End If
+End Function
+
+'###################################################################################################################
+'Function Name: fnPAC
+'Function Description: To provide wrong PAC 
+'Designed By Date: Sukirdha 
+'Designed Date(MM/DD/YY): 07/13/2021
+'Modified By&date: When do some change need to update here
+'###################################################################################################################
+
+Function fnPAC(intMobileNumber)
+'Set objkeys = createobject("Wscript.Shell")
+'objkeys.SendKeys "{PGDN}"
+If Browser("Evolution").Page("Page").Frame("eposTab&&0Frame").WebElement("Number transfer and cancellati").Exist(20) Then
+Browser("Evolution").Page("Page").Frame("eposTab&&0Frame").WebList("select_for_number_transfer_or_cancellation").Select "Move my number"
+Browser("Evolution").Page("Page").Frame("ePOSTab&&0Frame").WebEdit("The number being moved").Set intMobileNumber
+		Wait 2
+		Browser("Evolution").Page("Page").Frame("ePOSTab&&0Frame").WebEdit("PAC").Set "ABC123456"
+		Wait 3
+	End  IF
+	
+		If Browser("Evolution").Page("Page").Frame("ePOSTab&&0Frame").WebButton("Confirm_in_Transfer_Number_Section").Exist(10) Then
+		Browser("Evolution").Page("Page").Frame("ePOSTab&&0Frame").WebButton("Confirm_in_Transfer_Number_Section").Click
+	Wait 3
+	
+		If Browser("Evolution").Page("Page").Frame("ePOSTab&&0Frame").WebElement("The PAC doesn’t exist").Exist(2) Then
+		Reporter.ReportEvent micPass, "To verify if appropriate error is displayed", "The PAC doesn’t exist is displayed"
+		Else 
+		Reporter.ReportEvent micFail, "To verify if appropriate error is displayed", "The PAC doesn’t exist is not displayed"
+		End If
+		
+		If Browser("Evolution").Page("Page").Frame("ePOSTab&&0Frame").WebElement("The PAC doesn't exist").Exist(1) Then
+		Reporter.ReportEvent micPass, "To verify if appropriate error is displayed", "The PAC doesn’t exist is displayed"
+		Else 
+		Reporter.ReportEvent micFail, "To verify if appropriate error is displayed", "The PAC doesn’t exist is not displayed"
+		End If
+		
+		If Browser("Evolution").Page("Page").Frame("ePOSTab&&0Frame").WebElement("The PAC you provided doesn’t").Exist(1) Then
+		Reporter.ReportEvent micPass, "To verify if appropriate error is displayed", "Appropriate message is displayed"
+		Else 
+		Reporter.ReportEvent micFail, "To verify if appropriate error is displayed", "Appropriate message is not displayed"
+		End If
+		
+	End  If
+		
+
+End Function
+
+'###################################################################################################################
+'Function Name: fnToAddStockForHandsetOfCompanionDevice
+'Function Description: To add a stock iphone handset which is assosiated to a companion device
+'Designed By Date: Sukirdha 
+'Designed Date(MM/DD/YY): 07/15/2021
+'Modified By&date: 
+'###################################################################################################################
+
+Function fnToAddStockForHandsetOfCompanionDevice(strHANDSET_PLU,strHANDSET_IMEI,LoginType,strXstoreUsername,strXstorePassword)
+	Set WshellOBJ = CreateObject("WScript.Shell")
+	Wait 2
+	JavaWindow("Oracle Retail Xstore Point").JavaList("DtvList").Select "#2"
+	Wait 2
+	JavaWindow("Oracle Retail Xstore Point").JavaList("DtvList").Select "#6"
+	Wait 2
+	JavaWindow("Oracle Retail Xstore Point").JavaList("Adjustment Type").Select "Sellable"
+	Wait 2
+	JavaWindow("Oracle Retail Xstore Point").JavaList("Reason").Select "ASSUMED THEFT"
+	Wait 2
+	JavaWindow("Oracle Retail Xstore Point").JavaEdit("Justification").Set "test"
+	Wait 2
+ 	WshellOBJ.SendKeys"{F2}"
+ 	Wait 2
+JavaWindow("Oracle Retail Xstore Point").JavaEdit("Enter PLU").Set strHANDSET_PLU
+JavaWindow("Oracle Retail Xstore Point").JavaEdit("Enter PLU").Activate
+
+Wait 2
+JavaWindow("Oracle Retail Xstore Point").JavaEdit("Enter Quantity").Set "1"
+JavaWindow("Oracle Retail Xstore Point").JavaEdit("Enter Quantity").Activate
+
+Wait 2
+JavaWindow("Oracle Retail Xstore Point").JavaEdit("IMEI/Serial Number").Set strHANDSET_IMEI
+
+Wait 2
+JavaWindow("Oracle Retail Xstore Point").JavaButton("Add").Click
+Wait 2
+
+Set WshellOBJ = CreateObject("WScript.Shell")
+WshellOBJ.SendKeys"{F2}"
+
+Wait(3)
+
+Set WshellOBJ = CreateObject("WScript.Shell")
+WshellOBJ.SendKeys"{F2}"
+Wait(3)
+
+If JavaWindow("Oracle Retail Xstore Point").JavaButton("Back").Exist(3) Then
+
+Reporter.ReportEvent micPass,"Stock adjustment added for  PLU", "Stock adjustment added for  PLU successfully."
+Else
+
+Reporter.ReportEvent micPass,"Stock adjustment unsuccessful", "Stock adjustment  for  PLU Unsuccessfully."
+
+	
+End If
+
+Call Logout(LoginType)
+	
+	
+End Function
+
+'Trial sukirdha
+
+Function LoginXstore(LoginType,strXstoreUsername,strXstorePassword)
+        If (LoginType="Backoffice") Then
+            If JavaWindow("Oracle Retail Xstore Point").JavaButton("Back Office").Exist(2) Then
+                JavaWindow("Oracle Retail Xstore Point").JavaButton("Back Office").Click
+                JavaWindow("Oracle Retail Xstore Point").JavaEdit("Back Office Login").Set strXstoreUsername
+                JavaWindow("Oracle Retail Xstore Point").JavaEdit("Back Office Login").Activate
+                JavaWindow("Oracle Retail Xstore Point").JavaEdit("Back Office Login").Set strXstorePassword
+                JavaWindow("Oracle Retail Xstore Point").JavaEdit("Back Office Login").Activate
+
+            If (JavaWindow("Oracle Retail Xstore Point").JavaButton("Override").Exist(2)) Then
+                JavaWindow("Oracle Retail Xstore Point").JavaButton("Override").Click
+                Wait 2
+                JavaWindow("Oracle Retail Xstore Point").JavaButton("Yes").Click
+                Wait 2
+                JavaWindow("Oracle Retail Xstore Point").JavaButton("Confirm").Click
+                Else 
+                JavaWindow("Oracle Retail Xstore Point").JavaButton("Yes").Click
+                Wait 2
+                JavaWindow("Oracle Retail Xstore Point").JavaButton("Confirm").Click
+            End If
+
+            Else
+            JavaWindow("Oracle Retail Xstore Point").JavaEdit("Back Office Login").Set strXstoreUsername
+            JavaWindow("Oracle Retail Xstore Point").JavaEdit("Back Office Login").Activate
+            wait 2
+            JavaWindow("Oracle Retail Xstore Point").JavaEdit("Back Office Login").Set strXstorePassword
+            JavaWindow("Oracle Retail Xstore Point").JavaEdit("Back Office Login").Activate
+            wait 2
+            If (JavaWindow("Oracle Retail Xstore Point").JavaButton("Override").Exist(2)) Then
+                JavaWindow("Oracle Retail Xstore Point").JavaButton("Override").Click
+                Wait 2
+                JavaWindow("Oracle Retail Xstore Point").JavaButton("Yes").Click
+                Wait 2
+                JavaWindow("Oracle Retail Xstore Point").JavaButton("Confirm").Click
+                Else
+                JavaWindow("Oracle Retail Xstore Point").JavaButton("Yes").Click
+                Wait 2
+                JavaWindow("Oracle Retail Xstore Point").JavaButton("Confirm").Click
+            End If
+            
+        End If
+    ElseIf (LoginType="Till") Then
+        If (JavaWindow("Oracle Retail Xstore Point").JavaButton("Till").Exist(2)) Then
+            JavaWindow("Oracle Retail Xstore Point").JavaButton("Till").Click
+            JavaWindow("Oracle Retail Xstore Point").JavaEdit("Login").Set strXstoreUsername
+            JavaWindow("Oracle Retail Xstore Point").JavaEdit("Login").Activate
+            wait 2
+            JavaWindow("Oracle Retail Xstore Point").JavaEdit("Login").Set strXstorePassword
+            JavaWindow("Oracle Retail Xstore Point").JavaEdit("Login").Activate
+            Wait 2
+            If (JavaWindow("Oracle Retail Xstore Point").JavaButton("Override").Exist(2)) Then
+                JavaWindow("Oracle Retail Xstore Point").JavaButton("Override").Click
+'                Wait 2
+'                JavaWindow("Oracle Retail Xstore Point").JavaButton("Yes").Click
+'                Wait 2
+'                JavaWindow("Oracle Retail Xstore Point").JavaButton("Confirm").Click
+'                Else 
+'                JavaWindow("Oracle Retail Xstore Point").JavaButton("Yes").Click
+'                Wait 2
+'                JavaWindow("Oracle Retail Xstore Point").JavaButton("Confirm").Click
+            End If
+'            Else
+'            JavaWindow("Oracle Retail Xstore Point").JavaEdit("Login").Set strXstoreUsername
+'            JavaWindow("Oracle Retail Xstore Point").JavaEdit("Login").Activate
+'            JavaWindow("Oracle Retail Xstore Point").JavaEdit("Login").Set strXstorePassword
+'            JavaWindow("Oracle Retail Xstore Point").JavaEdit("Login").Activate
+'            If (JavaWindow("Oracle Retail Xstore Point").JavaButton("Override").Exist(2)) Then
+'                JavaWindow("Oracle Retail Xstore Point").JavaButton("Override").Click
+'                Wait 2
+''                JavaWindow("Oracle Retail Xstore Point").JavaButton("Yes").Click
+''                ssWait 2
+''                JavaWindow("Oracle Retail Xstore Point").JavaButton("Confirm").Click
+'           ElseIf (JavaWindow("Oracle Retail Xstore Point").JavaButton("Yes").Exist(2)) Then
+'                   JavaWindow("Oracle Retail Xstore Point").JavaButton("Yes").Click
+'                Wait 2
+'                JavaWindow("Oracle Retail Xstore Point").JavaButton("Confirm").Click
+'            Else
+'                Reporter.ReportEvent micPass, "Xstore Logged in","Step Passed"
+'            End If
+'        End If    
+'    Else
+'        Reporter.ReportEvent micFail, "Unable to login", "Test step Failed"
+    
+    End If
+    End If
+    
+End Function
+
+
+'###################################################################################################################
+'Function Name						: fnClearBrowingHistoryCookies 
+'Function Description				: Clearing browsing history and cookies
+'Designed By 						: Anil Esaralla
+'Designed Date(MM/DD/YY)			: 07/08/2021
+'Parameters						: Not required
+'###################################################################################################################
+
+Function fnClearBrowingHistoryCookies()
+
+	Set WshShell = CreateObject("WScript.Shell")
+	
+	'To Clear temp files from IE
+	WshShell.Run "RunDll32.exe inetCpl.cpl,ClearMyTracksByProcess 8"
+	Wait 2
+	
+	'To Clear Browsing Cookies
+	WshShell.Run "RunDll32.exe inetCpl.cpl,ClearMyTracksByProcess 2"
+	Wait 2
+	
+	'To Clear Browsing History
+	WshShell.Run "RunDll32.exe inetCpl.cpl,ClearMyTracksByProcess 1"
+	Wait 2
+	
+	Set WshShell = Nothing
+
+End Function
+
+'###################################################################################################################
+'Function Name					: fnSetIEZoomDefault
+'Function Description			: Capturing the data from the application to excel/data sheet
+'Designed By 					: Anil  Esaralla
+'Designed Date(MM/DD/YY)		: 07/14/2021
+'Parameters					: Not required
+
+'###################################################################################################################
+
+Function fnSetIEZoomDefault()
+
+	Dim objShell
+	 Set objShell = CreateObject("WScript.Shell")
+	 objShell.RegWrite "HKEY_CURRENT_USER\Software\Microsoft\Internet Explorer\Zoom\ZoomFactor", "100000", "REG_DWORD"
+	 Set objShell = Nothing
+	
+End Function
+
+'###################################################################################################################
+'Function Name						: fnTariffChange
+'Function Description				: To perform a tariff change for an existing connection
+'Designed By 						: Sukirdha S
+'Designed Date(MM/DD/YY)			: 07/27/2021
+'Parameters						: dtEffectiveDate
+'###################################################################################################################
+ Function fnTariffChange(dtEffectiveDate)
+ If Browser("Evolution").Page("Page").Frame("CSRDTab&&0Frame").WebElement("Phone Number").Exist(30) Then
+Browser("Evolution").Page("Page").Frame("CSRDTab&&0Frame").WebElement("Phone Number").Highlight
+Wait 1
+Browser("Evolution").Page("Page").Frame("CSRDTab&&0Frame").WebCheckBox("MISDN").Set "ON"
+End If
+ 	If Browser("Evolution").Page("Page").Frame("CSRDTab&&0Frame").WebButton("In Life Tariff Change").Exist(2) Then
+Browser("Evolution").Page("Page").Frame("CSRDTab&&0Frame").WebButton("In Life Tariff Change").Click
+End  If
+
+If Browser("Evolution").Page("Page").Frame("CSRDTab&&0Frame").WebElement("Eligible_Tariff_Allowance").Exist(10) Then
+	Browser("Evolution").Page("Page").Frame("CSRDTab&&0Frame").WebList("Eligible Tariff Allowance").Select 1
+	Wait 1
+End  If
+If Browser("Evolution").Page("Page").Frame("CSRDTab&&0Frame").WebElement("Effective_By_Date").Exist(5) Then
+	Browser("Evolution").Page("Page").Frame("CSRDTab&&0Frame").WebElement("Effective_By_Date").Highlight
+	Browser("Evolution").Page("Page").Frame("CSRDTab&&0Frame").WebEdit("Effective by").Set dtEffectiveDate 
+End If
+Wait 2
+Browser("Evolution").Page("Page").Frame("CSRDTab&&0Frame").WebButton("Submit").Click
+Wait 5
+If Browser("Evolution").Page("Page").Frame("CSRDTab&&0Frame").WebElement("innertext:=Future Dated In Life Tariff Change Details.*","index:=0").Exist(5) Then
+Browser("Evolution").Page("Page").Frame("CSRDTab&&0Frame").WebButton("Confirm").Click
+Reporter.ReportEvent micPass, "To verify if Tariff change is Submitted and Confirmed", "Tariff change is submitted and Confirmed"
+Else 
+Reporter.ReportEvent micFail, "To verify if Tariff change is Submitted", "Tariff change is not successful"
+End If
+ End Function
+ 
+ '###################################################################################################################
+'Function Name						: fnLogIntoXStore(LoginType, strXstoreUsername, strXstorePassword)
+'Function Description				: To log in to xstore
+'Designed By 						: Sukirdha S
+'Designed Date(MM/DD/YY)			: 08/24/2021
+'Parameters					     	: LoginType, strXstoreUsername, strXstorePassword
+'###################################################################################################################
+ 
+ Function fnLogIntoXStore(LoginType,strXstoreUsername,strXstorePassword)
+ 	
+	If (LoginType = "Backoffice") Then
+
+	If JavaWindow("Oracle Retail Xstore Point").JavaButton("Back Office").Exist(3) Then
+	JavaWindow("Oracle Retail Xstore Point").JavaButton("Back Office").Click
+		Wait 1
+		JavaWindow("Oracle Retail Xstore Point").JavaEdit("Back Office Login").Highlight
+		JavaWindow("Oracle Retail Xstore Point").JavaEdit("Back Office Login").Set strXstoreUsername
+		JavaWindow("Oracle Retail Xstore Point").JavaButton("Enter").Click
+		Wait 1
+		JavaWindow("Oracle Retail Xstore Point").JavaEdit("Back Office Login").Highlight
+		JavaWindow("Oracle Retail Xstore Point").JavaEdit("Back Office Login").Set strXstorePassword
+		JavaWindow("Oracle Retail Xstore Point").JavaButton("Enter").Click
+		Wait 1
+			If JavaWindow("Oracle Retail Xstore Point").JavaButton("Override").Exist(3) Then
+			JavaWindow("Oracle Retail Xstore Point").JavaButton("Override").Click
+			End If
+			Wait 1
+			If JavaWindow("Oracle Retail Xstore Point").JavaEdit("PosTextPane").Exist(2) Then
+			JavaWindow("Oracle Retail Xstore Point").JavaButton("Yes").Click
+			End If
+			Wait 1
+			If JavaWindow("Oracle Retail Xstore Point").JavaStaticText("Warning - Alerts(st)").Exist(3) Then
+			JavaWindow("Oracle Retail Xstore Point").JavaButton("Confirm at Warning alerts Page").Click
+			Wait 2
+			End If
+	Else 
+		JavaWindow("Oracle Retail Xstore Point").JavaEdit("Back Office Login").Highlight
+		JavaWindow("Oracle Retail Xstore Point").JavaEdit("Back Office Login").Set strXstoreUsername
+		JavaWindow("Oracle Retail Xstore Point").JavaButton("Enter").Click
+		Wait 1
+		JavaWindow("Oracle Retail Xstore Point").JavaEdit("Back Office Login").Highlight
+		JavaWindow("Oracle Retail Xstore Point").JavaEdit("Back Office Login").Set strXstorePassword
+		JavaWindow("Oracle Retail Xstore Point").JavaButton("Enter").Click
+		Wait 1
+			If JavaWindow("Oracle Retail Xstore Point").JavaButton("Override").Exist(3) Then
+			JavaWindow("Oracle Retail Xstore Point").JavaButton("Override").Click
+			End If
+			Wait 1
+			If JavaWindow("Oracle Retail Xstore Point").JavaEdit("PosTextPane").Exist(2) Then
+			JavaWindow("Oracle Retail Xstore Point").JavaButton("Yes").Click
+			End If
+			Wait 1
+			If JavaWindow("Oracle Retail Xstore Point").JavaStaticText("Warning - Alerts(st)").Exist(3) Then
+			JavaWindow("Oracle Retail Xstore Point").JavaButton("Confirm at Warning alerts Page").Click
+			Wait 2
+			End If
+	End  If
+Else
+If (LoginType = "Till") Then
+
+	If JavaWindow("Oracle Retail Xstore Point").JavaButton("Back Office").Exist(3) Then
+	JavaWindow("Oracle Retail Xstore Point").JavaButton("Back Office").Click
+		Wait 1
+		JavaWindow("Oracle Retail Xstore Point").JavaEdit("Back Office Login").Highlight
+		JavaWindow("Oracle Retail Xstore Point").JavaEdit("Back Office Login").Set strXstoreUsername
+		JavaWindow("Oracle Retail Xstore Point").JavaButton("Enter").Click
+		Wait 1
+		JavaWindow("Oracle Retail Xstore Point").JavaEdit("Back Office Login").Highlight
+		JavaWindow("Oracle Retail Xstore Point").JavaEdit("Back Office Login").Set strXstorePassword
+		JavaWindow("Oracle Retail Xstore Point").JavaButton("Enter").Click
+		Wait 1
+			If JavaWindow("Oracle Retail Xstore Point").JavaButton("Override").Exist(3) Then
+			JavaWindow("Oracle Retail Xstore Point").JavaButton("Override").Click
+			End If
+			Wait 1
+			If JavaWindow("Oracle Retail Xstore Point").JavaEdit("PosTextPane").Exist(2) Then
+			JavaWindow("Oracle Retail Xstore Point").JavaButton("Yes").Click
+			End If
+			Wait 1
+			If JavaWindow("Oracle Retail Xstore Point").JavaStaticText("Warning - Alerts(st)").Exist(3) Then
+			JavaWindow("Oracle Retail Xstore Point").JavaButton("Confirm at Warning alerts Page").Click
+			Wait 1
+				If JavaWindow("Oracle Retail Xstore Point").JavaButton("Till").Exist(1) then
+				JavaWindow("Oracle Retail Xstore Point").JavaButton("Till").Click
+				End If
+			End If
+	Else 
+		JavaWindow("Oracle Retail Xstore Point").JavaEdit("Back Office Login").Highlight
+		JavaWindow("Oracle Retail Xstore Point").JavaEdit("Back Office Login").Set strXstoreUsername
+		JavaWindow("Oracle Retail Xstore Point").JavaButton("Enter").Click
+		Wait 1
+		JavaWindow("Oracle Retail Xstore Point").JavaEdit("Back Office Login").Highlight
+		JavaWindow("Oracle Retail Xstore Point").JavaEdit("Back Office Login").Set strXstorePassword
+		JavaWindow("Oracle Retail Xstore Point").JavaButton("Enter").Click
+		Wait 1
+			If JavaWindow("Oracle Retail Xstore Point").JavaButton("Override").Exist(3) Then
+			JavaWindow("Oracle Retail Xstore Point").JavaButton("Override").Click
+			End If
+			Wait 1
+			If JavaWindow("Oracle Retail Xstore Point").JavaEdit("PosTextPane").Exist(2) Then
+			JavaWindow("Oracle Retail Xstore Point").JavaButton("Yes").Click
+			End If
+			Wait 1
+			If JavaWindow("Oracle Retail Xstore Point").JavaStaticText("Warning - Alerts(st)").Exist(3) Then
+			JavaWindow("Oracle Retail Xstore Point").JavaButton("Confirm at Warning alerts Page").Click
+			Wait 1
+				If JavaWindow("Oracle Retail Xstore Point").JavaButton("Till").Exist(1) then
+				JavaWindow("Oracle Retail Xstore Point").JavaButton("Till").Click
+				End If
+			End If
+	End  If
+End If
+End If
+ End Function
+ 
+ '###################################################################################################################
+'Function Name						: fnRetrieveAnNCOrderToViewport
+'Function Description				: To retrieve any NC order to view port
+'Designed By 						: Sukirdha S
+'Designed Date(MM/DD/YY)			: 08/24/2021
+'Parameters					     	: NA
+'###################################################################################################################
+
+Function fnRetrieveAnNCOrderToViewport()
+Wait 1	
+JavaWindow("Oracle Retail Xstore Point").JavaButton("Get Orders").Click
+Wait 1
+JavaWindow("Oracle Retail Xstore Point").JavaButton("Pending Orders").Click
+Wait 1
+JavaWindow("Oracle Retail Xstore Point").JavaButton("Retrieve Order Details").Click
+Wait 1
+End Function
+
+ '###################################################################################################################
+'Function Name						: LogOffFromXStore
+'Function Description				: To log off from xstore
+'Designed By 						: Sukirdha S
+'Designed Date(MM/DD/YY)			: 08/24/2021
+'Parameters					     	: NA
+'###################################################################################################################
+
+
+Function LogOffFromXStore()
+
+If JavaWindow("Oracle Retail Xstore Point").JavaButton("Till").Exist(1) Then
+JavaWindow("Oracle Retail Xstore Point").JavaButton("Till").Click
+End If
+	If JavaWindow("Oracle Retail Xstore Point").JavaButton("Log Off").Exist(2)  Then
+	JavaWindow("Oracle Retail Xstore Point").JavaButton("Log Off").Click
+	Wait 1
+		If JavaWindow("Oracle Retail Xstore Point").JavaButton("Yes").Exist(1) Then
+		JavaWindow("Oracle Retail Xstore Point").JavaButton("Yes").Click		
+		End If
+	End If
+End Function
+ 
+  '###################################################################################################################
+'Function Name						: fnAddStockTo2Products
+'Function Description				: To log off from xstore
+'Designed By 						: Sukirdha S
+'Designed Date(MM/DD/YY)			: 08/24/2021
+'Parameters					     	: strPLU, strIMEI, strPLU2, intQuantity
+'###################################################################################################################
+
+ Function fnAddStockTo2Products(strPLU, strIMEI, strPLU2, intQuantity)
+ 	Wait 1
+JavaWindow("Oracle Retail Xstore Point").JavaList("Main Menu").Select "#2"
+Wait 1
+JavaWindow("Oracle Retail Xstore Point").JavaList("Main Menu").Select "#6"
+Wait 1
+JavaWindow("Oracle Retail Xstore Point").JavaList("Adjustment Type").Select "Sellable"
+JavaWindow("Oracle Retail Xstore Point").JavaList("Reason").Select "BUNDLE CREATE"
+JavaWindow("Oracle Retail Xstore Point").JavaEdit("Justification").Set "testtest"
+JavaWindow("Oracle Retail Xstore Point").JavaButton("Confirm").Click
+Wait 1
+JavaWindow("Oracle Retail Xstore Point").JavaEdit("Enter PLU").Highlight
+JavaWindow("Oracle Retail Xstore Point").JavaEdit("Enter PLU").Set strPLU
+Set objkeys = CreateObject("WScript.Shell")
+objkeys.SendKeys "{ENTER}"	
+JavaWindow("Oracle Retail Xstore Point").JavaEdit("Enter Quantity").Set "1"
+JavaWindow("Oracle Retail Xstore Point").JavaButton("Enter").Click
+JavaWindow("Oracle Retail Xstore Point").JavaEdit("IMEI/Serial Number").Set strIMEI
+JavaWindow("Oracle Retail Xstore Point").JavaButton("Add").Click
+JavaWindow("Oracle Retail Xstore Point").JavaButton("Confirm_2").Click
+Wait 1
+JavaWindow("Oracle Retail Xstore Point").JavaEdit("Enter PLU").Highlight
+JavaWindow("Oracle Retail Xstore Point").JavaEdit("Enter PLU").Set strPLU2
+Set objkeys = CreateObject("WScript.Shell")
+objkeys.SendKeys "{ENTER}"	
+JavaWindow("Oracle Retail Xstore Point").JavaEdit("Enter Quantity").Set intQuantity
+JavaWindow("Oracle Retail Xstore Point").JavaButton("Enter").Click
+Wait 1
+JavaWindow("Oracle Retail Xstore Point").JavaButton("Confirm_2").Click
+Wait 1
+JavaWindow("Oracle Retail Xstore Point").JavaButton("Back").Click
+Wait 1
+
+ End Function
+ 
+ '###################################################################################################################
+'Function Name						: fnLaunchEvolutionFromXStore
+'Function Description				: To launch evolution from XStore
+'Designed By 						: Sukirdha S
+'Designed Date(MM/DD/YY)			: 08/25/2021
+'Parameters					     	: strUsername, strPassword
+'###################################################################################################################
+
+Function fnLaunchEvolutionFromXStore(strUsername, strPassword)
+	If JavaWindow("Oracle Retail Xstore Point").JavaButton("Evolution").Exist(3) Then
+	JavaWindow("Oracle Retail Xstore Point").JavaButton("Evolution").Click
+	Wait 2	
+	Browser("Evolution").Page("Evolution").WebEdit("WebEdit").Highlight
+	Browser("Evolution").Page("Evolution").WebEdit("WebEdit").Set strUsername 
+	Browser("Evolution").Page("Evolution").WebEdit("WebEdit_2").Set strPassword
+	Browser("Evolution").Page("Evolution").WebButton("Login").Highlight
+	Browser("Evolution").Page("Evolution").WebButton("Login").Click
+	Wait 60
+	If  Browser("Evolution").Page("Page").Frame("HomeTabFrame").WebElement("The Intranet appears to").Exist(40) Then
+	Reporter.ReportEvent micPass, "To verify if evolution is loaded", "Evolution is loaded, Pass"
+	Else 
+	Reporter.ReportEvent micFail, "To verify if evolution is loaded", "Evolution is not loaded, Fail"	
+	End If
+End If
+End Function
+
+ '###################################################################################################################
+'Function Name						: fnLaunchNCepos
+'Function Description				: To launch evolution from XStore
+'Designed By 						: Sukirdha S
+'Designed Date(MM/DD/YY)			: 08/25/2021
+'Parameters					     	: strUsername, strPassword
+'###################################################################################################################
+Function fnLaunchNCepos()
+
+If Browser("Evolution").Page("Page").WebElement("btnQuickLinks-btnIconEl").Exist(2) Then
+Browser("Evolution").Page("Page").WebElement("btnQuickLinks-btnIconEl").Click
+Browser("Evolution").Page("Page").WebElement("menuitem-1023-textEl").HoverTap
+Browser("Evolution").Page("Page").Link("NC New Consumer Sale").Click
+Wait 20
+	If Browser("Evolution").Page("Page").Frame("ePOSTab&&0Frame").WebElement("Phones").Exist(5) Then
+	Reporter.ReportEvent micPass, "To verify if NC-epos home page is loaded", "NC-epos home page is loaded successfully, Pass"
+	Else 
+	Reporter.ReportEvent micFail, "To verify if NC-epos home page is loaded", "NC-epos home page is not successfully, Fail"
+	End If
+End  IF
+
+End Function
+
+ '###################################################################################################################
+'Function Name						: fnAdd2ItemsToBasket
+'Function Description				: To add an IMEI device + a non IMEI accessory 
+'Designed By 						: Sukirdha S
+'Designed Date(MM/DD/YY)			: 08/25/2021
+'Parameters					     	: strUsername, strPassword
+'###################################################################################################################
+Function fnAdd2ItemsToBasket(strPLU,strPLU2)
+Wait 1
+Browser("Evolution").Page("Page").Frame("ePOSTab&&0Frame").WebButton("Scan / PLU").Click
+Browser("Evolution").Page("Page").Frame("ePOSTab&&0Frame").WebEdit("Search.").Set strPLU
+Browser("Evolution").Page("Page").Frame("ePOSTab&&0Frame").WebButton("Search.").Highlight
+Browser("Evolution").Page("Page").Frame("ePOSTab&&0Frame").WebButton("Search.").Click
+Wait 2
+Browser("Evolution").Page("Page").Frame("ePOSTab&&0Frame").WebButton("View product details").Click
+Wait 2
+Browser("Evolution").Page("Page").Frame("ePOSTab&&0Frame_2").WebElement("P30 Pro").Click
+Wait 2
+Set objkeys = CreateObject("WScript.Shell")
+objkeys.SendKeys ( "{PGDN 2}" )
+Wait 4
+
+Browser("Evolution").Page("Page").Frame("ePOSTab&&0Frame").WebButton("Select this plan").Highlight
+Browser("Evolution").Page("Page").Frame("ePOSTab&&0Frame").WebButton("Select this plan").Click
+
+Wait 2
+If Browser("Evolution").Page("Page").Frame("Frame_2").WebElement("Build your package").Exist(1) Then
+Browser("Evolution").Page("Page").Frame("Frame_2").WebElement("Build your package").Click
+End If
+Wait 3
+'objkeys.SendKeys ( "{PGDN 8}" )
+Set DR = CreateObject("Mercury.DeviceReplay")
+DR.Presskey 209
+DR.Presskey 209
+Wait 1
+DR.Presskey 209
+DR.Presskey 209
+DR.Presskey 209
+DR.Presskey 209
+Wait 1
+DR.Presskey 209
+DR.Presskey 209
+Wait 1
+Set DR = nothing
+'Browser("Evolution").Page("Page").Frame("Frame_2").WebButton("Add to basket").Highlight
+'Browser("Evolution").Page("Page").Frame("Frame_2").WebButton("Add to basket").Click
+
+
+Browser("Evolution").Page("Page").Frame("ePOSTab&&0Frame").WebButton("Add to basket").Highlight
+Browser("Evolution").Page("Page").Frame("ePOSTab&&0Frame").WebButton("Add to basket").Click
+Wait 2
+Browser("Evolution").Page("Page").Frame("ePOSTab&&0Frame").WebButton("Continue shopping").Click
+Wait 5
+Browser("Evolution").Page("Page").Frame("ePOSTab&&0Frame").WebButton("Scan / PLU").Highlight
+Browser("Evolution").Page("Page").Frame("ePOSTab&&0Frame").WebButton("Scan / PLU").Click
+Browser("Evolution").Page("Page").Frame("ePOSTab&&0Frame").WebEdit("Search.").Set strPLU2
+Browser("Evolution").Page("Page").Frame("ePOSTab&&0Frame").WebButton("Search.").Highlight
+Browser("Evolution").Page("Page").Frame("ePOSTab&&0Frame").WebButton("Search.").Click
+Wait 2
+Browser("Evolution").Page("Page").Frame("ePOSTab&&0Frame").WebButton("View product details").Click
+Wait 2
+Browser("Evolution").Page("Page").Frame("ePOSTab&&0Frame").WebButton("Add to basket").Click
+Wait 2
+objkeys.SendKeys ( "{PGDN 2}" )
+Browser("Evolution").Page("Page").Frame("ePOSTab&&0Frame").WebButton("Check out").Click
+
+	
+End Function
+
+ '###################################################################################################################
+'Function Name						: fnAddItemsToBasket
+'Function Description				: To add an IMEI device + a non IMEI accessory 
+'Designed By 						: Sukirdha S
+'Designed Date(MM/DD/YY)			: 08/25/2021
+'Parameters					     	: strUsername, strPassword
+'###################################################################################################################
+Function fnAddItemsToBasket(strPLU)
+Wait 1
+Browser("Evolution").Page("Page").Frame("ePOSTab&&0Frame").WebButton("Scan / PLU").Click
+Browser("Evolution").Page("Page").Frame("ePOSTab&&0Frame").WebEdit("Search.").Set strPLU
+Browser("Evolution").Page("Page").Frame("ePOSTab&&0Frame").WebButton("Search.").Highlight
+Browser("Evolution").Page("Page").Frame("ePOSTab&&0Frame").WebButton("Search.").Click
+Wait 2
+Browser("Evolution").Page("Page").Frame("ePOSTab&&0Frame").WebButton("View product details").Click
+Wait 2
+Browser("Evolution").Page("Page_2").Frame("ePOSTab&&0Frame").WebElement("Capacity").Click
+
+'Browser("Evolution").Page("Page").Frame("Frame").WebElement("Capacity").Click
+'Browser("Evolution").Page("Page").Frame("ePOSTab&&0Frame").WebElement("Capacity").Click
+wait 1
+Set DR = CreateObject("Mercury.DeviceReplay")
+DR.Presskey 209
+Wait 1
+DR.Presskey 209
+Wait 1
+Set DR = nothing
+Wait 2
+'Browser("Evolution").Page("Page").Frame("Frame").WebButton("Select this plan").Highlight
+'Browser("Evolution").Page("Page").Frame("Frame").WebButton("Select this plan").Click
+Browser("Evolution").Page("Page").Frame("ePOSTab&&0Frame_2").WebButton("Select this plan").Highlight
+Browser("Evolution").Page("Page").Frame("ePOSTab&&0Frame_2").WebButton("Select this plan").Click
+
+'Browser("Evolution").Page("Page").Frame("ePOSTab&&0Frame").WebButton("Select this plan").Highlight
+'Browser("Evolution").Page("Page").Frame("ePOSTab&&0Frame").WebButton("Select this plan").Click
+
+Wait 2
+
+If Browser("Evolution").Page("Page").Frame("ePOSTab&&0Frame").WebElement("Build your package").Exist(2) Then
+Browser("Evolution").Page("Page").Frame("ePOSTab&&0Frame").WebElement("Build your package").Click
+End If
+Wait 3
+'objkeys.SendKeys ( "{PGDN 8}" )
+Set DR = CreateObject("Mercury.DeviceReplay")
+DR.Presskey 209
+Wait 1
+DR.Presskey 209
+Wait 1
+DR.Presskey 209
+Wait 1
+DR.Presskey 209
+Wait 1
+DR.Presskey 209
+Wait 1
+DR.Presskey 209
+Wait 1
+DR.Presskey 209
+Wait 1
+DR.Presskey 209
+Wait 1
+DR.Presskey 209
+Wait 1
+Set DR = nothing
+If Browser("Evolution").Page("Page").Frame("Frame_4").WebButton("Add to basket").Exist(1) Then
+Browser("Evolution").Page("Page").Frame("Frame_4").WebButton("Add to basket").Highlight
+Browser("Evolution").Page("Page").Frame("Frame_4").WebButton("Add to basket").Click
+Else
+Browser("Evolution").Page("Page").Frame("ePOSTab&&0Frame").WebButton("Add to basket").Highlight
+Browser("Evolution").Page("Page").Frame("ePOSTab&&0Frame").WebButton("Add to basket").Click
+End If 
+Wait 10
+
+
+'Browser("Evolution").Page("Page").Frame("ePOSTab&&0Frame").WebButton("Continue shopping").Click
+'Wait 5
+'Browser("Evolution").Page("Page").Frame("ePOSTab&&0Frame").WebButton("Scan / PLU").Highlight
+'Browser("Evolution").Page("Page").Frame("ePOSTab&&0Frame").WebButton("Scan / PLU").Click
+'Browser("Evolution").Page("Page").Frame("ePOSTab&&0Frame").WebEdit("Search.").Set strPLU2
+'Browser("Evolution").Page("Page").Frame("ePOSTab&&0Frame").WebButton("Search.").Highlight
+'Browser("Evolution").Page("Page").Frame("ePOSTab&&0Frame").WebButton("Search.").Click
+'Wait 2
+'Browser("Evolution").Page("Page").Frame("ePOSTab&&0Frame").WebButton("View product details").Click
+'Wait 2
+'Browser("Evolution").Page("Page").Frame("ePOSTab&&0Frame").WebButton("Add to basket").Click
+'Wait 2
+If Browser("Evolution").Page("Page").Frame("ePOSTab&&0Frame").WebElement("New package").Exist(2) Then
+	Browser("Evolution").Page("Page").Frame("ePOSTab&&0Frame").WebElement("New package").Highlight
+	Browser("Evolution").Page("Page").Frame("ePOSTab&&0Frame").WebElement("New package").Click
+Else
+	Browser("Evolution").Page("Page").Frame("Frame").WebElement("New package").Highlight
+	Browser("Evolution").Page("Page").Frame("Frame").WebElement("New package").Click
+End If
+wait 1
+Set DR = CreateObject("Mercury.DeviceReplay")
+DR.Presskey 209
+Wait 1
+DR.Presskey 209
+Wait 1
+DR.Presskey 209
+Wait 1
+Set DR = nothing
+Wait 2
+If Browser("Evolution").Page("Page").Frame("ePOSTab&&0Frame").WebButton("Check out").Exist(2) Then
+	Browser("Evolution").Page("Page").Frame("ePOSTab&&0Frame").WebButton("Check out").Click
+	
+End If
+
+Wait 7
+	
+End Function
+
+ '###################################################################################################################
+'Function Name						: fnIdentityPage
+'Function Description				: To enter a valid new customer email ID and get through Identiy Page Validation
+'Designed By 						: Sukirdha S
+'Designed Date(MM/DD/YY)			: 08/27/2021
+'Parameters					     	: stremailID
+'###################################################################################################################
+
+Function fnIdentityPage(stremailID)
+		If Browser("Evolution").Page("Page").Frame("Frame").WebElement("Create an account for").Exist(4) Then
+	Reporter.ReportEvent micPass, "To verify if Identity is loaded", "Identity is loaded, Pass"
+	Browser("Evolution").Page("Page").Frame("Frame").WebEdit("login_hint").Highlight
+	Browser("Evolution").Page("Page").Frame("Frame").WebEdit("login_hint").Set stremailID
+	Wait 2
+	Browser("Evolution").Page("Page").Frame("Frame").WebButton("Continue").Highlight
+	Browser("Evolution").Page("Page").Frame("Frame").WebButton("Continue").Click
+	Else 
+	Reporter.ReportEvent micFail, "To verify if Identity is loaded", "Identity is not loaded, Fail"
+	End If
+End Function
+
+ '###################################################################################################################
+'Function Name						: fnCustomerAndDeliveryDetails
+'Function Description				: To enter a valid new customer email ID and get through Identiy Page Validation
+'Designed By 						: Sukirdha S
+'Designed Date(MM/DD/YY)			: 08/27/2021
+'Parameters					     	: strIMEI, intSSN, strFirstName, strLastName, dtDate, intMobileNumber, intHouseNumber,  intPostCode
+'###################################################################################################################
+
+
+
+Function fnCustomerAndDeliveryDetails(strIMEI, intSSN, strFirstName, strLastName, dtDate, intMobileNumber, intHouseNumber,  intPostCode)
+	
+If Browser("Evolution").Page("Page").Frame("ePOSTab&&0Frame").WebElement("Customer details").Exist(3)  Then
+Browser("Evolution").Page("Page").Frame("ePOSTab&&0Frame").WebElement("Customer details").Highlight
+Browser("Evolution").Page("Page").Frame("ePOSTab&&0Frame").WebElement("Customer details").Click
+msgbox ("Identified ePOSFrame")
+End  If
+Wait 2
+Browser("Evolution").Page("Page").Frame("ePOSTab&&0Frame").WebEdit("Select title...").Set "Mr"
+Browser("Evolution").Page("Page").Frame("ePOSTab&&0Frame").WebEdit("fname").Click
+Browser("Evolution").Page("Page").Frame("ePOSTab&&0Frame").WebEdit("fname").Set strFirstName
+Browser("Evolution").Page("Page").Frame("ePOSTab&&0Frame").WebEdit("mname").Set "Mc"
+Browser("Evolution").Page("Page").Frame("ePOSTab&&0Frame").WebEdit("lname").Set strLastName
+Browser("Evolution").Page("Page").Frame("ePOSTab&&0Frame").WebEdit("bday").Set dtDate
+Set DR = CreateObject("Mercury.DeviceReplay")
+DR.Presskey 209
+Wait 1
+Set DR = nothing
+Browser("Evolution").Page("Page").Frame("ePOSTab&&0Frame").WebEdit("tel").Set intMobileNumber
+Browser("Evolution").Page("Page").Frame("ePOSTab&&0Frame").WebEdit("address").Set intHouseNumber
+Browser("Evolution").Page("Page").Frame("ePOSTab&&0Frame").WebEdit("postal").Set intPostCode
+Wait 1
+Browser("Evolution").Page("Page").Frame("ePOSTab&&0Frame").WebButton("Find").Highlight
+Browser("Evolution").Page("Page").Frame("ePOSTab&&0Frame").WebButton("Find").Click
+Wait 5
+Browser("Evolution").Page("Page").Frame("ePOSTab&&0Frame").WebList("selectAddress").Highlight
+Browser("Evolution").Page("Page").Frame("ePOSTab&&0Frame").WebList("selectAddress").Select 1
+Wait 1
+Browser("Browser").Page("Page").Frame("ePOSTab&&0Frame").WebButton("Confirm and continue").Highlight
+Browser("Browser").Page("Page").Frame("ePOSTab&&0Frame").WebButton("Confirm and continue").Click
+'
+'	Else If Browser("Evolution").Page("Page").Frame("Frame").WebElement("Customer details").Exist(2) Then
+'	Browser("Evolution").Page("Page").Frame("Frame").WebElement("Customer details").Highlight
+'	Browser("Evolution").Page("Page").Frame("Frame").WebElement("Customer details").Click
+'	msgbox ("Identified Frame")
+'	Wait 1
+'	Browser("Evolution").Page("Page").Frame("Frame").WebEdit("Select title...").Set "Mr"
+'	Browser("Evolution").Page("Page").Frame("Frame").WebEdit("Select title...").Click
+'	Browser("Evolution").Page("Page").Frame("Frame").WebEdit("fname").Set strFirstName
+'	Browser("Evolution").Page("Page").Frame("Frame").WebEdit("mname").Set "Mc"
+'	Browser("Evolution").Page("Page").Frame("Frame").WebEdit("lname").Set strLastName
+'	Browser("Evolution").Page("Page").Frame("Frame").WebEdit("bday").Set dtDate
+'	Set DR = CreateObject("Mercury.DeviceReplay")
+'	DR.Presskey 209
+'	Wait 1
+'	Set DR = nothing
+'	Browser("Evolution").Page("Page").Frame("Frame").WebEdit("tel").Set intMobileNumber
+'	Browser("Evolution").Page("Page").Frame("Frame").WebEdit("address").Set intHouseNumber
+'	Browser("Evolution").Page("Page").Frame("Frame").WebEdit("postal").Set intPostCode
+'	Browser("Evolution").Page("Page").Frame("ePOSTab&&0Frame").WebEdit("postal").Set intPostCode
+'	Wait 1
+'	Browser("Evolution").Page("Page").Frame("Frame").WebButton("Find").Highlight
+'	Browser("Evolution").Page("Page").Frame("Frame").WebButton("Find").Click
+'	Wait 5
+'	Browser("Evolution").Page("Page").Frame("Frame").WebList("select").Select 1
+'	Wait 1
+'	Browser("Evolution").Page("Page").Frame("Frame").WebButton("Confirm and continue").Click
+'	Browser("Evolution").Page("Page").Frame("Frame").WebButton("Confirm and continue").Click
+'	End  If
+'End  If
+Wait 2
+'IMEI and SSN Details
+Browser("Evolution").Page("Page").Frame("ePOSTab&&0Frame").WebEdit("Enter IMEI").Set strIMEI
+Browser("Evolution").Page("Page").Frame("ePOSTab&&0Frame").WebEdit("Enter SSN").Highlight
+Browser("Evolution").Page("Page").Frame("ePOSTab&&0Frame").WebEdit("Enter SSN").DoubleClick
+Browser("Evolution").Page("Page").Frame("ePOSTab&&0Frame").WebEdit("Enter SSN").Set intSSN
+Wait 1
+Set DR = CreateObject("Mercury.DeviceReplay")
+DR.Presskey 209
+Wait 1
+Set DR = nothing
+Browser("Browser").Page("Page").Frame("ePOSTab&&0Frame").WebButton("Confirm and continue").Highlight
+Browser("Browser").Page("Page").Frame("ePOSTab&&0Frame").WebButton("Confirm and continue").Click
+'Reservation
+Wait 10
+
+
+End Function
+
+'scan an item and add to the basket
+
+Function ScanAndAdd(strPLU)
+	Wait 1
+Browser("Evolution").Page("Page").Frame("ePOSTab&&0Frame").WebButton("Scan / PLU").Click
+Browser("Evolution").Page("Page").Frame("ePOSTab&&0Frame").WebEdit("Search.").Set strPLU
+Browser("Evolution").Page("Page").Frame("ePOSTab&&0Frame").WebButton("Search.").Highlight
+Browser("Evolution").Page("Page").Frame("ePOSTab&&0Frame").WebButton("Search.").Click
+Wait 2
+Browser("Evolution").Page("Page").Frame("ePOSTab&&0Frame").WebButton("View product details").Click
+Wait 2
+'Browser("Evolution").Page("Page").Frame("ePOSTab&&0Frame").WebElement("Capacity").Highlight
+'Browser("Evolution").Page("Page").Frame("ePOSTab&&0Frame").WebElement("Capacity").Click
+Wait 2
+Set objkeys = CreateObject("WScript.Shell")
+objkeys.SendKeys ( "{PGDN 2}" )
+Wait 3
+Browser("Evolution").Page("Page").Frame("ePOSTab&&0Frame").WebButton("Select this plan").Highlight
+Browser("Evolution").Page("Page").Frame("ePOSTab&&0Frame").WebButton("Select this plan").Click
+Wait 2
+If Browser("Evolution").Page("Page").Frame("ePOSTab&&0Frame").WebElement("Build your package").Exist(2) Then
+Browser("Evolution").Page("Page").Frame("ePOSTab&&0Frame").WebElement("Build your package").Click
+End If
+Wait 3
+'objkeys.SendKeys ( "{PGDN 8}" )
+Set DR = CreateObject("Mercury.DeviceReplay")
+DR.Presskey 209
+DR.Presskey 209
+Wait 1
+DR.Presskey 209
+DR.Presskey 209
+DR.Presskey 209
+DR.Presskey 209
+Wait 1
+DR.Presskey 209
+DR.Presskey 209
+Wait 1
+Set DR = nothing
+Browser("Evolution").Page("Page").Frame("ePOSTab&&0Frame").WebButton("Add to basket").Highlight
+Browser("Evolution").Page("Page").Frame("ePOSTab&&0Frame").WebButton("Add to basket").Click
+Wait 2
+'objkeys.SendKeys ( "{PGDN 2}" )
+Set DR = CreateObject("Mercury.DeviceReplay")
+DR.Presskey 209
+DR.Presskey 209
+DR.Presskey 209
+Set DR = nothing
+Browser("Evolution").Page("Page").Frame("ePOSTab&&0Frame").WebElement("New package").Highlight
+Browser("Evolution").Page("Page").Frame("ePOSTab&&0Frame").WebElement("New package").Click
+
+Browser("Evolution").Page("Page").Frame("ePOSTab&&0Frame").WebButton("Check out").Highlight
+Browser("Evolution").Page("Page").Frame("ePOSTab&&0Frame").WebButton("Check out").Click
+
+End Function
+
+
+ '###################################################################################################################
+'Function Name						: fnLogIntoXStore(LoginType, strXstoreUsername, strXstorePassword)
+'Function Description				: To log in to xstore
+'Designed By 						: Sukirdha S
+'Designed Date(MM/DD/YY)			: 08/24/2021
+'Parameters					     	: LoginType, strXstoreUsername, strXstorePassword
+'###################################################################################################################
+ 
+ Function fnLogIntoXStore1(LoginType,strUsername,strPassword)
+ 	'This function is written while re correcting the old scripts and as modifying th eexisting function would be time consuming 
+	If (LoginType = "Backoffice") Then
+
+	If JavaWindow("Oracle Retail Xstore Point").JavaButton("Back Office").Exist(3) Then
+	JavaWindow("Oracle Retail Xstore Point").JavaButton("Back Office").Click
+		Wait 1
+		JavaWindow("Oracle Retail Xstore Point").JavaEdit("Back Office Login").Highlight
+		JavaWindow("Oracle Retail Xstore Point").JavaEdit("Back Office Login").Set strUsername
+		JavaWindow("Oracle Retail Xstore Point").JavaButton("Enter").Click
+		Wait 1
+		JavaWindow("Oracle Retail Xstore Point").JavaEdit("Back Office Login").Highlight
+		JavaWindow("Oracle Retail Xstore Point").JavaEdit("Back Office Login").Set strPassword
+		JavaWindow("Oracle Retail Xstore Point").JavaButton("Enter").Click
+		Wait 1
+			If JavaWindow("Oracle Retail Xstore Point").JavaButton("Override").Exist(3) Then
+			JavaWindow("Oracle Retail Xstore Point").JavaButton("Override").Click
+			End If
+			Wait 1
+			If JavaWindow("Oracle Retail Xstore Point").JavaEdit("PosTextPane").Exist(2) Then
+			JavaWindow("Oracle Retail Xstore Point").JavaButton("Yes").Click
+			End If
+			Wait 1
+			If JavaWindow("Oracle Retail Xstore Point").JavaStaticText("Warning - Alerts(st)").Exist(3) Then
+			JavaWindow("Oracle Retail Xstore Point").JavaButton("Confirm at Warning alerts Page").Click
+			Wait 2
+			End If
+	Else 
+		JavaWindow("Oracle Retail Xstore Point").JavaEdit("Back Office Login").Highlight
+		JavaWindow("Oracle Retail Xstore Point").JavaEdit("Back Office Login").Set strUsername
+		JavaWindow("Oracle Retail Xstore Point").JavaButton("Enter").Click
+		Wait 1
+		JavaWindow("Oracle Retail Xstore Point").JavaEdit("Back Office Login").Highlight
+		JavaWindow("Oracle Retail Xstore Point").JavaEdit("Back Office Login").Set strPassword
+		JavaWindow("Oracle Retail Xstore Point").JavaButton("Enter").Click
+		Wait 1
+			If JavaWindow("Oracle Retail Xstore Point").JavaButton("Override").Exist(3) Then
+			JavaWindow("Oracle Retail Xstore Point").JavaButton("Override").Click
+			End If
+			Wait 1
+			If JavaWindow("Oracle Retail Xstore Point").JavaEdit("PosTextPane").Exist(2) Then
+			JavaWindow("Oracle Retail Xstore Point").JavaButton("Yes").Click
+			Else If JavaWindow("Oracle Retail Xstore Point").JavaObject("PosTitledInstructionPanelUI$Co").Exist(1) Then
+				JavaWindow("Oracle Retail Xstore Point").JavaButton("Yes").Click
+			End If
+			
+			
+
+			Wait 1
+			If JavaWindow("Oracle Retail Xstore Point").JavaStaticText("Warning - Alerts(st)").Exist(3) Then
+			JavaWindow("Oracle Retail Xstore Point").JavaButton("Confirm at Warning alerts Page").Click
+			Wait 2
+			End If
+	End  If
+	End  If 
+Else
+If (LoginType = "Till") Then
+
+	If JavaWindow("Oracle Retail Xstore Point").JavaButton("Back Office").Exist(3) Then
+	JavaWindow("Oracle Retail Xstore Point").JavaButton("Back Office").Click
+		Wait 1
+		JavaWindow("Oracle Retail Xstore Point").JavaEdit("Back Office Login").Highlight
+		JavaWindow("Oracle Retail Xstore Point").JavaEdit("Back Office Login").Set strUsername
+		JavaWindow("Oracle Retail Xstore Point").JavaButton("Enter").Click
+		Wait 1
+		JavaWindow("Oracle Retail Xstore Point").JavaEdit("Back Office Login").Highlight
+		JavaWindow("Oracle Retail Xstore Point").JavaEdit("Back Office Login").Set strPassword
+		JavaWindow("Oracle Retail Xstore Point").JavaButton("Enter").Click
+		Wait 1
+			If JavaWindow("Oracle Retail Xstore Point").JavaButton("Override").Exist(3) Then
+			JavaWindow("Oracle Retail Xstore Point").JavaButton("Override").Click
+			End If
+			Wait 1
+			If JavaWindow("Oracle Retail Xstore Point").JavaEdit("PosTextPane").Exist(2) Then
+			JavaWindow("Oracle Retail Xstore Point").JavaButton("Yes").Click
+			End If
+			Wait 1
+			If JavaWindow("Oracle Retail Xstore Point").JavaStaticText("Warning - Alerts(st)").Exist(3) Then
+			JavaWindow("Oracle Retail Xstore Point").JavaButton("Confirm at Warning alerts Page").Click
+			Wait 1
+				If JavaWindow("Oracle Retail Xstore Point").JavaButton("Till").Exist(1) then
+				JavaWindow("Oracle Retail Xstore Point").JavaButton("Till").Click
+				End If
+			End If
+	Else 
+		JavaWindow("Oracle Retail Xstore Point").JavaEdit("Back Office Login").Highlight
+		JavaWindow("Oracle Retail Xstore Point").JavaEdit("Back Office Login").Set strUsername
+		JavaWindow("Oracle Retail Xstore Point").JavaButton("Enter").Click
+		Wait 1
+		JavaWindow("Oracle Retail Xstore Point").JavaEdit("Back Office Login").Highlight
+		JavaWindow("Oracle Retail Xstore Point").JavaEdit("Back Office Login").Set strPassword
+		JavaWindow("Oracle Retail Xstore Point").JavaButton("Enter").Click
+		Wait 1
+			If JavaWindow("Oracle Retail Xstore Point").JavaButton("Override").Exist(3) Then
+			JavaWindow("Oracle Retail Xstore Point").JavaButton("Override").Click
+			End If
+			Wait 1
+			If JavaWindow("Oracle Retail Xstore Point").JavaEdit("PosTextPane").Exist(2) Then
+			JavaWindow("Oracle Retail Xstore Point").JavaButton("Yes").Click
+			End If
+			Wait 1
+			If JavaWindow("Oracle Retail Xstore Point").JavaStaticText("Warning - Alerts(st)").Exist(3) Then
+			JavaWindow("Oracle Retail Xstore Point").JavaButton("Confirm at Warning alerts Page").Click
+			Wait 1
+				If JavaWindow("Oracle Retail Xstore Point").JavaButton("Till").Exist(1) then
+				JavaWindow("Oracle Retail Xstore Point").JavaButton("Till").Click
+				End If
+			End If
+	End  If
+End If
+End If
+ End Function
+ 
+  '###################################################################################################################
+'Function Name						: fnLogOutOfEvolution
+'Function Description				: To log out of evolution
+'Designed By 						: Sukirdha S
+'Designed Date(MM/DD/YY)			: 09/15/2021
+'Parameters					     	: NA
+'###################################################################################################################
+ Function fnLogOutOfEvolution()
+ 	Wait 1
+	Browser("Evolution").Page("Page").WebElement("app-menubar-logout-button-btnIconEl").Click
+	Wait 30
+	Browser("Evolution").Page("Evolution").Image("X_neon").Click
+ End Function
+ 
+ '###################################################################################################################
+'Function Name						: fnEligibilitycheck
+'Function Description				: To perform eligibility check
+'Designed By 						: Sukirdha S
+'Designed Date(MM/DD/YY)			: 08/24/2021
+'Parameters					     	: 
+'###################################################################################################################
+ 
+ Function fnEligibilitycheck()
+' Set DR = CreateObject("Mercury.DeviceReplay")
+'DR.Presskey 209
+'Wait 1
+'Set DR = nothing
+'Browser("Evolution").Page("Page").Frame("ePOSTab&&0Frame").WebList("Time At Address").Select "More than 10 years"
+'Wait 1
+'Browser("Evolution").Page("Page").Frame("ePOSTab&&0Frame").WebList("Employment Status").Select  "Employed"
+'Wait 1
+'Browser("Evolution").Page("Page").Frame("ePOSTab&&0Frame").WebList("Personal Income Information").Select "More than £50,000"
+'Wait 1
+'Set DR = CreateObject("Mercury.DeviceReplay")
+'DR.Presskey 209
+'Wait 1
+'Set DR = nothing
+'Wait 1
+'Browser("Evolution").Page("Page").Frame("ePOSTab&&0Frame").WebElement("WebElement").Highlight
+'Browser("Evolution").Page("Page").Frame("ePOSTab&&0Frame").WebElement("WebElement").Click
+'
+'
+'
+'Wait 1
+'Browser("Evolution").Page("Page").Frame("ePOSTab&&0Frame").WebButton("Confirm and continue after Reservation").Highlight
+'Browser("Evolution").Page("Page").Frame("ePOSTab&&0Frame").WebButton("Confirm and continue after Reservation").Click
+Wait 1
+Browser("Evolution").Page("Page").Frame("ePOSTab&&0Frame").WebButton("Confirm and continue_After eligibility").Highlight
+Browser("Evolution").Page("Page").Frame("ePOSTab&&0Frame").WebButton("Confirm and continue_After eligibility").Click
+
+
+'Browser("Evolution").Page("Page").Frame("ePOSTab&&0Frame").WebButton("Confirm and continue before eligibility cehck").Highlight
+'Browser("Evolution").Page("Page").Frame("ePOSTab&&0Frame").WebButton("Confirm and continue before eligibility cehck").Click
+Wait 10
+Browser("Evolution").Page("Page").Frame("ePOSTab&&0Frame").WebButton("I am the advisor").Highlight
+Browser("Evolution").Page("Page").Frame("ePOSTab&&0Frame").WebButton("I am the advisor").Click
+Wait 2
+Browser("Evolution").Page("Page").Frame("ePOSTab&&0Frame").WebButton("Continue with eligibility").Highlight
+Browser("Evolution").Page("Page").Frame("ePOSTab&&0Frame").WebButton("Continue with eligibility").Click
+Wait 8
+
+ End Function
+ 
+  '###################################################################################################################
+'Function Name						: fnAccountDetails
+'Function Description				: To ass account and credit details
+'Designed By 						: Sukirdha S
+'Designed Date(MM/DD/YY)			: 08/24/2021
+'Parameters					     	: 
+'###################################################################################################################
+ Function fnAccountDetails()
+ 	Browser("Evolution").Page("Page").Frame("ePOSTab&&0Frame").WebEdit("Name As displayed on your account").Set "cepta"
+Set DR = CreateObject("Mercury.DeviceReplay")
+DR.Presskey 209
+DR.Presskey 209
+Wait 1
+Set DR = nothing
+Browser("Evolution").Page("Page").Frame("ePOSTab&&0Frame").WebEdit("Sort Code").Set "774914"
+Browser("Evolution").Page("Page").Frame("ePOSTab&&0Frame").WebEdit("Account Number").Set "70422162"
+Wait 1
+Browser("Evolution").Page("Page").Frame("ePOSTab&&0Frame").WebElement("Terms and Condition Check box 1").Click
+Browser("Evolution").Page("Page").Frame("ePOSTab&&0Frame").WebElement("Terms and Condition Check box 2").Click
+Wait 1
+Browser("Evolution").Page("Page").Frame("ePOSTab&&0Frame").WebButton("Confirm and continue").Highlight
+Browser("Evolution").Page("Page").Frame("ePOSTab&&0Frame").WebButton("Confirm and continue").Click
+'Browser("Evolution").Page("Page").Frame("ePOSTab&&0Frame").WebButton("Confirm and continue After Entering Account Details").Highlight
+'Browser("Evolution").Page("Page").Frame("ePOSTab&&0Frame").WebButton("Confirm and continue After Entering Account Details").Click
+
+Wait 8
+
+Set DR = CreateObject("Mercury.DeviceReplay")
+DR.Presskey 209
+Wait 1
+Set DR = nothing
+Browser("Evolution").Page("Page").Frame("Frame").WebEdit("Card Holder Name").Set "Jane"
+Browser("Evolution").Page("Page").Frame("Frame").WebEdit("card Number").Set "'375705004001005"
+Browser("Evolution").Page("Page").Frame("Frame").WebEdit("CVC").Set "2134"
+Browser("Evolution").Page("Page").Frame("Frame").WebList("EXPIRYDATEMONTH").Select "12"
+Browser("Evolution").Page("Page").Frame("Frame").WebList("EXPIRYDATEYEAR").Select "2022"
+Browser("Evolution").Page("Page").Frame("Frame").WebElement("Payment data").Click
+
+
+ End Function

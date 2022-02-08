@@ -1,0 +1,4 @@
+﻿<Properties>
+  <WatchEntry0 value="CashAmount" />
+  <WatchEntry1 value="JavaWindow(&quot;Oracle Retail Xstore Point&quot;).JavaButton(&quot;CASH amount&quot;).highlight" />
+</Properties>

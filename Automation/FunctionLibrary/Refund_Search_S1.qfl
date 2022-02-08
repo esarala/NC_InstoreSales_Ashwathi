@@ -1,0 +1,490 @@
+﻿'###################################################################################################################
+'Function Name: fnRefundSearchUsingStoreDetails
+'Function Description: To search a transaction using Store and Tran details in refund flow
+'Designed By:Sukirdha
+'Designed Date(MM/DD/YY): 18/06/2021
+'Modified By&date: When do some change need to update here
+'###################################################################################################################
+
+Function fnRefundSearchUsingStoreDetails(ByVal intTransactionNumber,ByVal intDateofPurchase,ByVal intTill,ByVal intStore)
+	
+	On Error Resume Next
+	
+	If    JavaWindow("Oracle Retail Xstore Point").JavaButton("Additional Options").Exist(10)  Then
+		JavaWindow("Oracle Retail Xstore Point").JavaButton("Additional Options").Click
+		Reporter.ReportEvent micPass, "Additional Options Should be Displayed", " Clicked on the Additional Option Button Successfully"
+		If JavaWindow("Oracle Retail Xstore Point").JavaButton("Refund").Exist(5) Then
+			JavaWindow("Oracle Retail Xstore Point").JavaButton("Refund").Click
+		End If
+		JavaWindow("Oracle Retail Xstore Point").JavaEdit("Store").Set intStore
+		JavaWindow("Oracle Retail Xstore Point").JavaEdit("Date of Purchase").Set intDateofPurchase
+		JavaWindow("Oracle Retail Xstore Point").JavaEdit("Till Number").Set intTill
+		JavaWindow("Oracle Retail Xstore Point").JavaEdit("Transaction Number").Set intTransactionNumber
+		JavaWindow("Oracle Retail Xstore Point").JavaButton("Search").Click
+	Else
+		Reporter.ReportEvent micFail, "Additional Options Should be Displayed", " Unable to Click the Additional Option Button"
+		ExitTest
+	End If
+	
+	fnRefundSearchUsingStoreDetails = Nothing
+	
+End Function 
+
+'###################################################################################################################
+'Function Name: fnRefundSearchUsingStoreDetails
+'Function Description: To search a transaction using Store and Tran details in refund flow
+'Designed By:Sukirdha
+'Designed Date(MM/DD/YY): 18/06/2021
+'Modified By&date: When do some change need to update here
+'###################################################################################################################
+
+Function fnLoginXstore(ByVal LoginType1,ByVal strUsername,ByVal strPassword)
+	
+	On Error Resume Next
+	
+	' Login
+	If JavaWindow("Oracle Retail Xstore Point").JavaButton("Till").Exist(10) Then
+		JavaWindow("Oracle Retail Xstore Point").JavaButton("Till").Click
+	End If
+	JavaWindow("Oracle Retail Xstore Point").JavaEdit("Login").Set strUserName
+	JavaWindow("Oracle Retail Xstore Point").JavaButton("Enter").Click
+	JavaWindow("Oracle Retail Xstore Point").JavaEdit("Login").Set strPassword
+	JavaWindow("Oracle Retail Xstore Point").JavaButton("Enter").Click
+	If JavaWindow("Oracle Retail Xstore Point").JavaButton("Override").Click Then
+		JavaWindow("Oracle Retail Xstore Point").JavaButton("Override").Click
+	End If
+	Reporter.ReportEvent micPass, "Logining into XStore without override", "Logged into XStore successfully."
+
+	' Future Enhancement
+
+	
+	fnLoginXstore = Nothing
+	
+End Function
+
+''###################################################################################################################
+'Function Name: fnAgreementDetailsWithInsurance
+'Function Description: To choose the terms and conditions of all agreements and continue
+'Designed By Date:Sukirdha
+'Designed Date(MM/DD/YY): 06/23/2021
+'Modified By&date: When do some change need to update here
+'###################################################################################################################
+
+
+Function fnAgreementDetailsWithInsurance()
+
+	If 		Browser("Browser").Page("Page").Frame("eposTab&&0Frame").WebButton("Continue_Agreement").Exist(30) Then
+		
+		Browser("Browser").Page("Page").Frame("eposTab&&0Frame").WebButton("Continue_Agreement").Click
+	End If
+	
+	Wait 3
+	
+	If 		Browser("Browser").Page("Page").Frame("eposTab&&0Frame").WebButton("Continue_KeyInfo").Exist(60) Then 
+		Browser("Browser").Page("Page").Frame("eposTab&&0Frame").WebButton("Continue_KeyInfo").Click
+	Else	Reporter.ReportEvent micFail,"Click on Key information continue button","Key information continue button does not exist"
+	End If
+	
+	wait 5
+	
+	If 		Browser("Browser").Page("Page").Frame("eposTab&&0Frame").WebButton("Read PCCI").Exist(60) Then 
+		Browser("Browser").Page("Page").Frame("eposTab&&0Frame").WebButton("Read PCCI").Click
+	Else	Reporter.ReportEvent micFail,"Click on Read PCCI button"," Read PCCI button does not exist"
+	End If
+	
+	Wait 5
+	
+	If 		Browser("Browser").Page("Page").Frame("ePOSTab&&0Frame").WebElement("I agree_2").Exist(60) Then 
+		Browser("Browser").Page("Page").Frame("ePOSTab&&0Frame").WebElement("I agree_2").Click
+       Else       Reporter.ReportEvent micFail,"Click on I agree button SECCI","I agree option does not exist in SECCI page"
+       End If
+       
+  	If  		Browser("Browser").Page("Page").Frame("eposTab&&0Frame").WebButton("Continue_SECCI").Exist(60) Then
+		Browser("Browser").Page("Page").Frame("eposTab&&0Frame").WebButton("Continue_SECCI").Click
+	Else    	Reporter.ReportEvent micFail,"Click on continue button on CCA","Continue button does not exist in CCA page"
+	End If
+
+	Wait 2
+
+	If		Browser("Browser").Page("Page").Frame("eposTab&&0Frame").WebButton("Read the Consumer Credit").Exist(60) Then 
+	     Browser("Browser").Page("Page").Frame("eposTab&&0Frame").WebButton("Read the Consumer Credit").Click
+       Else      	Reporter.ReportEvent micFail,"Click on Read the consumer credit link","Read the consumer credit link does not exist"
+       End If
+	
+      Wait 2
+	
+      If 		Browser("Browser").Page("Page").Frame("ePOSTab&&0Frame").WebElement("I agree_2").Exist(60) Then 
+       	Browser("Browser").Page("Page").Frame("ePOSTab&&0Frame").WebElement("I agree_2").Click
+      Else        Reporter.ReportEvent micFail,"Click on I agree button SECCI","I agree option does not exist in SECCI page"
+      End If
+    
+     Wait 2
+     
+     If  		Browser("Browser").Page("Page").Frame("eposTab&&0Frame").WebButton("Continue_CCA").Exist(60) Then
+     		Browser("Browser").Page("Page").Frame("eposTab&&0Frame").WebButton("Continue_CCA").Click
+    Else        	Reporter.ReportEvent micFail,"Click on continue button on CCA","Continue button does not exist in CCA page"
+    End If
+
+	Wait 2
+
+
+	If 		Browser("Browser").Page("Page").Frame("eposTab&&0Frame").WebButton("Read Pay Monthly Mobile").Exist(60) Then
+	    	Browser("Browser").Page("Page").Frame("eposTab&&0Frame").WebButton("Read Pay Monthly Mobile").Click
+       Else    	Reporter.ReportEvent micFail,"Click on Read Pay Monthly Mobile link","Read Pay Monthly Mobile link does not exist"
+   	End If
+   
+   Wait 2
+   
+   	 If 		Browser("Browser").Page("Page").Frame("ePOSTab&&0Frame").WebElement("I agree_2").Exist(60) Then 
+	 	Browser("Browser").Page("Page").Frame("ePOSTab&&0Frame").WebElement("I agree_2").Click
+    	Else       Reporter.ReportEvent micFail,"Click on I agree button SECCI","I agree option does not exist in SECCI page"
+ 	End If
+
+    Wait 2
+    
+    If 	Browser("Browser").Page("Page").Frame("ePOSTab&&0Frame_2").WebElement("Pay Monthly Mobile Agreement").EXIST(50)  Then
+        Browser("Browser").Page("Page").Frame("ePOSTab&&0Frame_2").WebElement("Pay Monthly Mobile Agreement").Click
+    ELSE    
+    Reporter.ReportEvent micFail,"Pay monthly agreement link","pay monthly agreement link does not exist in pay monthly agreement page"	
+    End If
+    
+    Wait 1
+    
+     If 	  	Browser("Browser").Page("Page").Frame("ePOSTab&&0Frame").WebElement("I agree_3").Exist(60) Then 
+      	Browser("Browser").Page("Page").Frame("ePOSTab&&0Frame").WebElement("I agree_3").Click
+     Else		Reporter.ReportEvent micFail,"Click on I agree button Pay Monthly","I agree option does not exist in Pay Monthly page"
+    End If
+ 
+    Wait 3
+    
+    If 		Browser("Browser").Page("Page").Frame("eposTab&&0Frame").WebElement("Pay_Monthly_Agreement").Exist(60) Then 
+            Browser("Browser").Page("Page").Frame("eposTab&&0Frame").WebElement("Pay_Monthly_Agreement").Click
+    Else      	  Reporter.ReportEvent micFail,"Select pay monthly agreement check box","pay monthly agreement check box does not exist in pay monthly agreement page"
+    End If
+   
+   Wait 3
+    
+    If  	Browser("Browser").Page("Page").Frame("ePOSTab&&0Frame_2").WebElement("Pay Monthly Mobile Agreement_2").Exist(60) Then
+     Browser("Browser").Page("Page").Frame("ePOSTab&&0Frame_2").WebElement("Pay Monthly Mobile Agreement_2").Click
+   Else        Reporter.ReportEvent micFail,"Select check my coverage check box","check my coverage check box does not exist in pay monthly agreement page"
+   End If
+  
+    Wait 2
+    
+    If  	Browser("Browser").Page("Page").Frame("ePOSTab&&0Frame_2").WebElement("I confirm that I have").Exist(30)Then
+      Browser("Browser").Page("Page").Frame("ePOSTab&&0Frame_2").WebElement("I confirm that I have").Click
+     Else       Reporter.ReportEvent micFail,"Click on continue on Pay monthly section","continue button does not exist in pay monthly section"
+    End If
+
+Wait 3
+
+	If 	 Browser("Browser").Page("Page").Frame("ePOSTab&&0Frame_2").WebElement("Insurance Product Information").Exist(60) Then
+	 Browser("Browser").Page("Page").Frame("ePOSTab&&0Frame_2").WebElement("Insurance Product Information").Click
+     	Else        Reporter.ReportEvent micFail,"Click on View Insurance link in Insurance section","View Insurance link is not displayed in Insurance section"
+  	End If
+   
+   wait 3
+   
+     If 	Browser("Browser").Page("Page").Frame("ePOSTab&&0Frame").WebElement("I agree_4").Exist(60) Then
+      	Browser("Browser").Page("Page").Frame("ePOSTab&&0Frame").WebElement("I agree_4").Click
+    Else        Reporter.ReportEvent micFail,"Click on I agree button in Insurance light box","I agree option does not exist in in Insurance light box"
+    End If
+    
+    Wait 2
+    
+ 	   If 	Browser("Browser").Page("Page").Frame("ePOSTab&&0Frame_2").WebElement("I have read and agree").Exist(50)Then
+	  Browser("Browser").Page("Page").Frame("ePOSTab&&0Frame_2").WebElement("I have read and agree").Click
+ 	 Else Reporter.ReportEvent micFail,"Click on continue button in Insurance Section","Continue button does not exist in Insurance section"
+   	 End If
+    
+    Wait 2
+  
+	  If Browser("Browser").Page("Page").Frame("eposTab&&0Frame").WebButton("Continue_PayMnthly").Exist(60) Then
+	         Browser("Browser").Page("Page").Frame("eposTab&&0Frame").WebButton("Continue_PayMnthly").Click
+   	 Else        Reporter.ReportEvent micFail,"Click on continue on Pay monthly page","continue button does not exist in pay monthly page"
+    End If
+    
+    Wait 2
+    
+    If Browser("Browser").Page("Page").Frame("eposTab&&0Frame").WebButton("Continue_agreements_Final").Exist(60)Then
+            Browser("Browser").Page("Page").Frame("eposTab&&0Frame").WebButton("Continue_agreements_Final").Click
+    Else        Reporter.ReportEvent micFail,"Click on continue on agreement page","continue button does not exist in agreement page"
+    End If
+    
+    Wait 2	
+	If Browser("Browser").Page("Page").Frame("FinishAccSetUp").Link("Skip for now").Exist(60) Then
+	 Reporter.ReportEvent micPass,"Navigate to FinishAccountSetup page","Navigated to FinishAccountSetup page successfully"
+	Else Reporter.ReportEvent micFail,"Navigate to FinishAccountSetup page","Not naviagted to FinishAccountSetup page, cross verify the page"
+	End If
+	
+End Function
+
+
+
+'###################################################################################################################
+'Function Name: fnLoginWithWarningPopUp
+'Function Description: Login into Xstore Application
+'Designed By Date: Sukirdha
+'Designed Date(MM/DD/YY): 06/24/2021
+'###################################################################################################################
+
+
+Function fnLoginWithWarningPopUp(LoginType,strXstoreUsername,strXstorePassword)
+		If (LoginType="Backoffice") Then
+		If (JavaWindow("Oracle Retail Xstore Point").JavaButton("Back Office").Exist(2)) Then
+			JavaWindow("Oracle Retail Xstore Point").JavaButton("Back Office").Click
+			JavaWindow("Oracle Retail Xstore Point").JavaEdit("Back Office Login").Set strXstoreUsername
+			JavaWindow("Oracle Retail Xstore Point").JavaEdit("Back Office Login").Activate
+			JavaWindow("Oracle Retail Xstore Point").JavaEdit("Back Office Login").Set strXstorePassword
+			JavaWindow("Oracle Retail Xstore Point").JavaEdit("Back Office Login").Activate
+
+			If (JavaWindow("Oracle Retail Xstore Point").JavaButton("Override").Exist(2)) Then
+				JavaWindow("Oracle Retail Xstore Point").JavaButton("Override").Click
+				Wait 2
+				If JavaWindow("Oracle Retail Xstore Point").JavaButton("Yes").Exist(5) Then
+					JavaWindow("Oracle Retail Xstore Point").JavaButton("Yes").Click
+				End  If
+				If  JavaWindow("Oracle Retail Xstore Point").JavaButton("Yes").Exist(5) Then
+					JavaWindow("Oracle Retail Xstore Point").JavaButton("Yes").Click
+				End If
+				If  JavaWindow("Oracle Retail Xstore Point").JavaButton("Confirm").Exist(5) Then
+					JavaWindow("Oracle Retail Xstore Point").JavaButton("Confirm").Click
+				End If
+			End If
+
+			Else
+			JavaWindow("Oracle Retail Xstore Point").JavaEdit("Back Office Login").Set strXstoreUsername
+			JavaWindow("Oracle Retail Xstore Point").JavaEdit("Back Office Login").Activate
+			wait 2
+			JavaWindow("Oracle Retail Xstore Point").JavaEdit("Back Office Login").Set strXstorePassword
+			JavaWindow("Oracle Retail Xstore Point").JavaEdit("Back Office Login").Activate
+			wait 2
+			If (JavaWindow("Oracle Retail Xstore Point").JavaButton("Override").Exist(2)) Then
+				JavaWindow("Oracle Retail Xstore Point").JavaButton("Override").Click
+				Wait 2
+				JavaWindow("Oracle Retail Xstore Point").JavaButton("Yes").Click
+				Wait 2
+				JavaWindow("Oracle Retail Xstore Point").JavaButton("Confirm").Click
+				Else
+				JavaWindow("Oracle Retail Xstore Point").JavaButton("Yes").Click
+				Wait 2
+				JavaWindow("Oracle Retail Xstore Point").JavaButton("Confirm").Click
+			End If
+			
+		End If
+	ElseIf (LoginType="Till") Then
+'			JavaWindow("Oracle Retail Xstore Point").JavaEdit("Login").Set
+		If (JavaWindow("Oracle Retail Xstore Point").JavaButton("Till").Exist(2)) Then
+			JavaWindow("Oracle Retail Xstore Point").JavaButton("Till").Click
+			JavaWindow("Oracle Retail Xstore Point").JavaEdit("Login").Set strXstoreUsername
+			JavaWindow("Oracle Retail Xstore Point").JavaEdit("Login").Activate
+			wait 2
+			JavaWindow("Oracle Retail Xstore Point").JavaEdit("Login").Set strXstorePassword
+			JavaWindow("Oracle Retail Xstore Point").JavaEdit("Login").Activate
+			Wait 2
+			If (JavaWindow("Oracle Retail Xstore Point").JavaButton("Override").Exist(2)) Then
+				JavaWindow("Oracle Retail Xstore Point").JavaButton("Override").Click
+				Wait 2
+				' change
+				JavaWindow("Oracle Retail Xstore Point").JavaButton("Yes").Click
+				JavaWindow("Oracle Retail Xstore Point").JavaButton("Yes").Click
+				Wait 2
+				JavaWindow("Oracle Retail Xstore Point").JavaButton("Confirm").Click
+'				Else 
+'				JavaWindow("Oracle Retail Xstore Point").JavaButton("Yes").Click
+'				Wait 2
+'				JavaWindow("Oracle Retail Xstore Point").JavaButton("Confirm").Click
+			End If
+'			Else
+'			JavaWindow("Oracle Retail Xstore Point").JavaEdit("Login").Set strXstoreUsername
+'			JavaWindow("Oracle Retail Xstore Point").JavaEdit("Login").Activate
+'			JavaWindow("Oracle Retail Xstore Point").JavaEdit("Login").Set strXstorePassword
+'			JavaWindow("Oracle Retail Xstore Point").JavaEdit("Login").Activate
+'			If (JavaWindow("Oracle Retail Xstore Point").JavaButton("Override").Exist(2)) Then
+'				JavaWindow("Oracle Retail Xstore Point").JavaButton("Override").Click
+'				Wait 2
+''				JavaWindow("Oracle Retail Xstore Point").JavaButton("Yes").Click
+''				ssWait 2
+''				JavaWindow("Oracle Retail Xstore Point").JavaButton("Confirm").Click
+'		   ElseIf (JavaWindow("Oracle Retail Xstore Point").JavaButton("Yes").Exist(2)) Then
+'		   		JavaWindow("Oracle Retail Xstore Point").JavaButton("Yes").Click
+'				Wait 2
+'				JavaWindow("Oracle Retail Xstore Point").JavaButton("Confirm").Click
+'			Else
+'				Reporter.ReportEvent micPass, "Xstore Logged in","Step Passed"
+'			End If
+'		End If	
+'	Else
+'		Reporter.ReportEvent micFail, "Unable to login", "Test step Failed"
+	
+	End If
+	End If
+	
+End Function
+
+'Trial and Error_Sukirdha
+
+Function fnLoginWithWarningPopUp1(LoginType,strXstoreUsername,strXstorePassword)
+		If (LoginType="Backoffice") Then
+			If (JavaWindow("Oracle Retail Xstore Point").JavaButton("Back Office").Exist(2)) Then
+				JavaWindow("Oracle Retail Xstore Point").JavaButton("Back Office").Click
+				JavaWindow("Oracle Retail Xstore Point").JavaEdit("Back Office Login").Set strXstoreUsername
+				JavaWindow("Oracle Retail Xstore Point").JavaEdit("Back Office Login").Activate
+				JavaWindow("Oracle Retail Xstore Point").JavaEdit("Back Office Login").Set strXstorePassword
+				JavaWindow("Oracle Retail Xstore Point").JavaEdit("Back Office Login").Activate
+
+				If (JavaWindow("Oracle Retail Xstore Point").JavaButton("Override").Exist(2)) Then
+					JavaWindow("Oracle Retail Xstore Point").JavaButton("Override").Click
+					Wait 2
+					If JavaWindow("Oracle Retail Xstore Point").JavaButton("Yes").Exist(5) Then
+						JavaWindow("Oracle Retail Xstore Point").JavaButton("Yes").Click
+					End  If
+					If  JavaWindow("Oracle Retail Xstore Point").JavaButton("Yes").Exist(5) Then
+						JavaWindow("Oracle Retail Xstore Point").JavaButton("Yes").Click
+					End If
+					If  JavaWindow("Oracle Retail Xstore Point").JavaButton("Confirm").Exist(5) Then
+						JavaWindow("Oracle Retail Xstore Point").JavaButton("Confirm").Click
+					End If
+				Else
+					If JavaWindow("Oracle Retail Xstore Point").JavaButton("Yes").Exist(5) Then
+						JavaWindow("Oracle Retail Xstore Point").JavaButton("Yes").Click
+					End  If
+					If  JavaWindow("Oracle Retail Xstore Point").JavaButton("Yes").Exist(5) Then
+						JavaWindow("Oracle Retail Xstore Point").JavaButton("Yes").Click
+					End If
+					If  JavaWindow("Oracle Retail Xstore Point").JavaButton("Confirm").Exist(5) Then
+						JavaWindow("Oracle Retail Xstore Point").JavaButton("Confirm").Click
+					End If
+				End If
+
+			Else
+				JavaWindow("Oracle Retail Xstore Point").JavaEdit("Back Office Login").Set strXstoreUsername
+				JavaWindow("Oracle Retail Xstore Point").JavaEdit("Back Office Login").Activate
+				wait 2
+				JavaWindow("Oracle Retail Xstore Point").JavaEdit("Back Office Login").Set strXstorePassword
+				JavaWindow("Oracle Retail Xstore Point").JavaEdit("Back Office Login").Activate
+				wait 2
+				If (JavaWindow("Oracle Retail Xstore Point").JavaButton("Override").Exist(2)) Then
+					JavaWindow("Oracle Retail Xstore Point").JavaButton("Override").Click
+					Wait 2
+					If JavaWindow("Oracle Retail Xstore Point").JavaButton("Yes").Exist(5) Then
+						JavaWindow("Oracle Retail Xstore Point").JavaButton("Yes").Click
+					End  If
+					If  JavaWindow("Oracle Retail Xstore Point").JavaButton("Yes").Exist(5) Then
+						JavaWindow("Oracle Retail Xstore Point").JavaButton("Yes").Click
+					End If
+					If  JavaWindow("Oracle Retail Xstore Point").JavaButton("Confirm").Exist(5) Then
+						JavaWindow("Oracle Retail Xstore Point").JavaButton("Confirm").Click
+					End If
+				Else
+					If JavaWindow("Oracle Retail Xstore Point").JavaButton("Yes").Exist(5) Then
+						JavaWindow("Oracle Retail Xstore Point").JavaButton("Yes").Click
+					End  If
+					If  JavaWindow("Oracle Retail Xstore Point").JavaButton("Yes").Exist(5) Then
+						JavaWindow("Oracle Retail Xstore Point").JavaButton("Yes").Click
+					End If
+					If  JavaWindow("Oracle Retail Xstore Point").JavaButton("Confirm").Exist(5) Then
+						JavaWindow("Oracle Retail Xstore Point").JavaButton("Confirm").Click
+					End If
+				End If
+				
+			End If
+	ElseIf (LoginType="Till") Then
+'			JavaWindow("Oracle Retail Xstore Point").JavaEdit("Login").Set
+		If (JavaWindow("Oracle Retail Xstore Point").JavaButton("Till").Exist(2)) Then
+			JavaWindow("Oracle Retail Xstore Point").JavaButton("Till").Click
+			JavaWindow("Oracle Retail Xstore Point").JavaEdit("Login").Set strXstoreUsername
+			JavaWindow("Oracle Retail Xstore Point").JavaEdit("Login").Activate
+			wait 2
+			JavaWindow("Oracle Retail Xstore Point").JavaEdit("Login").Set strXstorePassword
+			JavaWindow("Oracle Retail Xstore Point").JavaEdit("Login").Activate
+			Wait 2
+			If (JavaWindow("Oracle Retail Xstore Point").JavaButton("Override").Exist(2)) Then
+				JavaWindow("Oracle Retail Xstore Point").JavaButton("Override").Click
+				Wait 2
+				' change
+				JavaWindow("Oracle Retail Xstore Point").JavaButton("Yes").Click
+				JavaWindow("Oracle Retail Xstore Point").JavaButton("Yes").Click
+				Wait 2
+				JavaWindow("Oracle Retail Xstore Point").JavaButton("Confirm").Click
+'				Else 
+'				JavaWindow("Oracle Retail Xstore Point").JavaButton("Yes").Click
+'				Wait 2
+'				JavaWindow("Oracle Retail Xstore Point").JavaButton("Confirm").Click
+			End If
+'			Else
+'			JavaWindow("Oracle Retail Xstore Point").JavaEdit("Login").Set strXstoreUsername
+'			JavaWindow("Oracle Retail Xstore Point").JavaEdit("Login").Activate
+'			JavaWindow("Oracle Retail Xstore Point").JavaEdit("Login").Set strXstorePassword
+'			JavaWindow("Oracle Retail Xstore Point").JavaEdit("Login").Activate
+'			If (JavaWindow("Oracle Retail Xstore Point").JavaButton("Override").Exist(2)) Then
+'				JavaWindow("Oracle Retail Xstore Point").JavaButton("Override").Click
+'				Wait 2
+''				JavaWindow("Oracle Retail Xstore Point").JavaButton("Yes").Click
+''				ssWait 2
+''				JavaWindow("Oracle Retail Xstore Point").JavaButton("Confirm").Click
+'		   ElseIf (JavaWindow("Oracle Retail Xstore Point").JavaButton("Yes").Exist(2)) Then
+'		   		JavaWindow("Oracle Retail Xstore Point").JavaButton("Yes").Click
+'				Wait 2
+'				JavaWindow("Oracle Retail Xstore Point").JavaButton("Confirm").Click
+'			Else
+'				Reporter.ReportEvent micPass, "Xstore Logged in","Step Passed"
+'			End If
+'		End If	
+'	Else
+'		Reporter.ReportEvent micFail, "Unable to login", "Test step Failed"
+	
+	End If
+	End If
+	
+End Function
+
+'###################################################################################################################
+'Function Name: fnAddingAmazonPrimeVideo
+'Function Description: To add the perk, Amazon Prime Video while placing an order in NC
+'Designed By:Sukirdha
+'Designed Date(MM/DD/YY): 06/25/2021
+'Modified By&date: When do some change need to update here
+'###################################################################################################################
+
+Function fnAddingAmazonPrimeVideo()
+Set obj = createobject("Wscript.shell")
+wait 2
+If Browser("Browser").Page("Page").Frame("ePOSTab&&0Frame").WebElement("Amazon Prime Video").Exist(5) Then
+    Browser("Browser").Page("Page").Frame("ePOSTab&&0Frame").WebElement("Amazon Prime Video").HoverTap
+    wait 2
+    Browser("Browser").Page("Page").Frame("ePOSTab&&0Frame").WebElement("innertext:=Amazon Prime.*","index:=1").Click
+End If
+Wait 2
+Browser("Browser").Page("Page").Frame("ePOSTab&&0Frame").WebElement("Pick this extra, on us").Click
+Wait 2
+End Function
+
+'###################################################################################################################
+'Function Name: fnAddingAmazonPrimeVideo1
+'Function Description: To add the perk, Amazon Prime Video while placing an order in NC
+'Designed By:Sukirdha
+'Designed Date(MM/DD/YY): 06/25/2021
+'Modified By&date: When do some change need to update here
+'###################################################################################################################
+
+Function fnAddingAmazonPrimeVideo1()
+Set obj = createobject("Wscript.shell")
+wait 2
+If Browser("Browser").Page("Page").Frame("ePOSTab&&0Frame_3").WebElement("Amazon Prime Video").Exist(40) Then
+	Browser("Browser").Page("Page").Frame("ePOSTab&&0Frame_3").WebElement("Amazon Prime Video").HoverTap
+Wait 3
+Browser("Browser").Page("Page").Frame("ePOSTab&&0Frame_3").WebElement("innertext:=Amazon Prime.*","index:=0").Click
+End If
+Wait 3
+Browser("Browser").Page("Page").Frame("ePOSTab&&0Frame_3").WebElement("Pick this extra, on us").Click
+
+'If Browser("Browser").Page("Page").Frame("ePOSTab&&0Frame").WebElement("Amazon Prime Video").Exist(5) Then
+'    Browser("Browser").Page("Page").Frame("ePOSTab&&0Frame").WebElement("Amazon Prime Video").HoverTap
+'    wait 2
+'    Browser("Browser").Page("Page").Frame("ePOSTab&&0Frame").WebElement("innertext:=Amazon Prime.*","index:=1").Click
+'End If
+'Wait 2
+'Browser("Browser").Page("Page").Frame("ePOSTab&&0Frame").WebElement("Pick this extra, on us").Click
+Wait 2
+End Function

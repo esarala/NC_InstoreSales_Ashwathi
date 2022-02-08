@@ -1,0 +1,4 @@
+﻿<Properties>
+  <WatchEntry0 value="Browser(&quot;Evolution&quot;).Page(&quot;Page&quot;).Frame(&quot;Frame&quot;).WebButton(&quot;Select this plan&quot;).highlight" />
+  <WatchEntry1 value="intAccountNumber" />
+</Properties>

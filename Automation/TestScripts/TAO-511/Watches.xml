@@ -1,0 +1,4 @@
+﻿<Properties>
+  <WatchEntry0 value="JavaWindow(&quot;Oracle Retail Xstore Point&quot;).JavaButton(&quot;Till&quot;).Exist(2)" />
+  <WatchEntry1 value="DirPath" />
+</Properties>

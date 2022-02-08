@@ -1,0 +1,1 @@
+﻿var __testDataSource={items:[{dataFilePath:'Default.xlsx',dataFileFormat:'excel',dataFileFolder:'C:\\OnStack_InStoreSales\\Automation\\TestScripts\\AO2_01_ISS_UAT_133\\Res2',namePairs:[]}]};

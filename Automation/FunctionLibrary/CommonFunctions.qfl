@@ -1,4 +1,31 @@
-﻿Function checkMyIdentity()
+﻿'###################################################################################################################
+'Function Name: LaunchEvolutionFromXstore
+'Function Description: EvolutionLoginBrowser
+'Designed By Date:RAMESH Thota
+'Designed Date(MM/DD/YY): 04/26/2021
+'Modified By&date: When do some change need to update here
+'###################################################################################################################
+
+Function LaunchEvolutionFromXstore()
+	If Browser("Evolution").Page("Evolution").Exist(10) Then
+		Browser("Evolution").Close
+	End  If
+	If JavaWindow("Oracle Retail Xstore Point").JavaButton("Evolution").Exist(2) Then
+		JavaWindow("Oracle Retail Xstore Point").JavaButton("Evolution").Click
+		Reporter.ReportEvent micPass,"Evolution button should click","Evolution button clicked successfully"
+		If Browser("Evolution").Page("Evolution").WebEdit("store").Exist(30) Then
+			Reporter.ReportEvent micPass, "Evolution store ID page should launch","Evolution store ID page has launched successfully"
+		Else
+			Reporter.ReportEvent micFail, "Evolution store ID page should launch","Evolution store ID page is not launched successfully"
+		End If
+	Else 
+		Reporter.ReportEvent micFail,"Evolution button should click","Evolution button doesn't exist"
+	End If
+	
+
+End Function
+
+Function checkMyIdentity()
 
 	If Browser("Evolution").Page("Evolution").WebElement("MyIdentity").Exist(30) Then
 		Reporter.ReportEvent micPass, "My Identity link should display","My Identity link is displayed"
@@ -54,27 +81,37 @@ End Function
 
 
 Function LoginIntoEvolution(strUsername,strPassword)
-	
-	wait 5
+	If Browser("Evolution").Page("Evolution").WebEdit("WebEdit").Exist(30) Then
+		wait 2
+		Reporter.ReportEvent micPass, "Enter user name", "Entered user name and name is: "&strUsername
 		Browser("Evolution").Page("Evolution").WebEdit("WebEdit").Set strUsername
-	wait 5
+	Else 
+		Reporter.ReportEvent micFail, "Enter user name", "User Name filed does not exist "
+	End If
+	If Browser("Evolution").Page("Evolution").WebEdit("WebEdit_2").Exist(30) Then
+		wait 2
+		Reporter.ReportEvent micPass, "Enter password", "Entered password and password is: "&strPassword
 		Browser("Evolution").Page("Evolution").WebEdit("WebEdit_2").Set strPassword
-	wait 5
-	
-	If Browser("Evolution").Page("Evolution").WebElement("Login").Exist(3) Then
+	Else 
+		Reporter.ReportEvent micFail, "Enter password", "Password filed does not exist "
+	End If	
+	If Browser("Evolution").Page("Evolution").WebElement("Login").Exist(30) Then
 		Browser("Evolution").Page("Evolution").WebElement("Login").Click
 	End If
-	
+		Wait 2
+		
+	If Browser("Browser").Page("Evolution").WebButton("Just log me in").Exist (30) Then
+		Browser("Browser").Page("Evolution").WebButton("Just log me in").Click
+	End  If
+		
 End Function
 
 Function checkWelcome()
-	
 	If Browser("Evolution").Page("Evolution").WebElement("Welcome").Exist(30) Then
 		Reporter.ReportEvent micPass, "Welcome tag should display","Welcome tag is displayed"
 	Else
 		Reporter.ReportEvent micFail, "Welcome tag should display","Welcome tag is not displayed cross verify"
 	End If
-	
 End Function
 
 Function OopsExistCheckinEvolution()
@@ -88,7 +125,7 @@ if Browser("Evolution").Page("Evolution").WebElement("Oops").Exist(2) then
 	
 	If strcomp(WebOops,"Oops")=0 Then
 		reporter.ReportEvent micPass, "Oops Screen", "The Oops is displayed as expected, Test Passed!"
-		
+	
 		If Browser("Evolution").Page("Evolution").WebElement("We can't find your location").Exist(2) Then
 					
 			reporter.ReportEvent micPass, "Oops Screen", "The Oops is displayed as expected, Test Passed!"
@@ -128,12 +165,12 @@ Function ChangeLocation()
 End Function
 
 Function JustLogMein()
-
-	wait 2
-	If Browser("Evolution").Page("Evolution").WebElement("Class Name:=WebButton","value:=Just log me in").Exist(3) Then
+	If Browser("Evolution").Page("Evolution").WebElement("Class Name:=WebButton","value:=Just log me in").Exist(30) Then
 		Browser("Evolution").Page("Evolution").WebElement("Class Name:=WebButton","value:=Just log me in").Click
+		Reporter.ReportEvent micPass,"click LogMein button","clicked LogMein Button"
+	Else
+		Reporter.ReportEvent micPass,"click LogMein button","LogMein Button doesn't exist"	
 	End If
-	
 End Function
 
 Function EvolutionLogout()
@@ -142,119 +179,60 @@ Function EvolutionLogout()
 	End If
 End Function
 
-Function EvolutionLoginXstore()
-
-	If (JavaWindow("Oracle Retail Xstore Point").JavaButton("Evolution").Exist(2)) Then
-		JavaWindow("Oracle Retail Xstore Point").JavaButton("Evolution").Click
-		Reporter.ReportEvent micPass, "Evolution Button is present in Xstore","Test Passed"
-		Else
-		Reporter.ReportEvent micFail, "Evolution Button is not present in Xstore","Test Failed"
-	End If
-	
-End Function
+'Function EvolutionLoginXstore()
+'
+'	If JavaWindow("Oracle Retail Xstore Point").JavaButton("Evolution").Exist(2) Then
+'		JavaWindow("Oracle Retail Xstore Point").JavaButton("Evolution").Click
+'		Reporter.ReportEvent micPass, "Click Evolution Button in Xstore","Evolution button clicked"
+'	Else
+'		Reporter.ReportEvent micFail, "Click Evolution Button in Xstore","Evolution button doesn't exist"
+'	End If
+'	
+'End Function
 
 Function HomePageCheck()
-
-wait 7
-
-'If Browser("Evolution").Page("Evolution").WebElement("innerhtml:=Advisor: Evoloadtest010").Exist(3) and Browser("Evolution").Page("Evolution").WebElement("innerhtml:=Store id: 0921").exist(3) Then
-'			reporter.ReportEvent micPass, "Store Number and Advisor Name", "The Store Number and Advisor Name are displayed in the Evolution Homepage as expected, Test Passed"
-'			wait 2
-'else
-'			reporter.ReportEvent micFail, "Store Number and Advisor Name", "The Store Number and Advisor Name are not displayed in the Evolution Homepage as expected, Test Failed!"
-'End If
-		
-
-		
-		If Browser("Evolution").Page("Page").WebEdit("searchQuery").Exist(3) Then
-			reporter.ReportEvent micPass, "Evolution Homepage", "The Evolution homepage is opened so Test Pass"
-			'Browser("Evolution").Page("Page").WebEdit("searchQuery").Click
-			
-			If Browser("Evolution").Page("Evolution").WebElement("innerhtml:=Advisor: Evoloadtest010").Exist(3) Then
-				reporter.ReportEvent micPass, "User Login", "The User has been logged in to Evolution Successfully"
-	
-'					If Browser("Evolution").Page("Evolution").WebElement("innerhtml:=Advisor: Evoloadtest010").Exist(3) and Browser("Evolution").Page("Evolution").WebElement("innerhtml:=Store id: 0921").exist(3) Then
-'						reporter.ReportEvent micPass, "Store Number and Advisor Name", "The Store Number and Advisor Name are displayed in the Evolution Homepage as expected, Test Passed"
-'						wait 2
-'					else
-'						reporter.ReportEvent micFail, "Store Number and Advisor Name", "The Store Number and Advisor Name are not displayed in the Evolution Homepage as expected, Test Failed!"
-'					End If
-	
-			End If
-
-		else
-			reporter.ReportEvent micFail, "Evolution Homepage", "The Evolution homepage is not opened, Test Pass!"
-			Browser("Evolution").Close
-			
-		End If
-	
+If Browser("Evolution").Page("Page").WebEdit("searchQuery").Exist(30) Then
+	Reporter.ReportEvent micPass, "Evolution Homepage should open", "The Evolution homepage is opened"
+'	If Browser("Evolution").Page("Evolution").WebElement("innerhtml:=Advisor: Evoloadtest010").Exist(3) Then
+'		reporter.ReportEvent micPass, "User should Login", "The User has been logged in to Evolution Successfully"
+'	End If
+Else
+	Reporter.ReportEvent micFail, "Evolution Homepage should open", "The Evolution homepage is not opened"
+	Browser("Evolution").Close
+End If
 End Function
 
 Function HomePageNegativeCheck()
-	
 	wait 7
-	
-	
 	If Browser("Evolution").Page("Evolution").WebElement("innerhtml:=Advisor: Evoloadtest010").Exist(3) and Browser("Evolution").Page("Evolution").WebElement("innerhtml:=Store id: 0921").exist(3) Then
-			reporter.ReportEvent micFail, "Store Number and Advisor Name", "The Store Number and Advisor Name are displayed in the Evolution Homepage as expected, Test Passed"
-			wait 2
-	else
-			reporter.ReportEvent micPass, "Store Number and Advisor Name", "The Store Number and Advisor Name are not displayed in the Evolution Homepage as expected, Test Failed!"
-	End If
-					
+		Reporter.ReportEvent micFail, "Store Number and Advisor Name", "The Store Number and Advisor Name are displayed in the Evolution Homepage as expected, Test Passed"
+		wait 2
+	Else
+		Reporter.ReportEvent micPass, "Store Number and Advisor Name", "The Store Number and Advisor Name are not displayed in the Evolution Homepage as expected, Test Failed!"
+	End If					
 	wait 2
 	
-'		'Logout of Evolution homepage
-'		If Browser("Evolution").Page("Page").WebEdit("searchQuery").Exist(3) Then
-'		
-'			If Browser("Evolution").Page("Evolution").WebElement("We didn't recognise your").Exist(3) Then
-'
-'				reporter.ReportEvent micPass, "Evolution Homepage", "The Evolution homepage is opened so Test Failed"
-'				'Browser("Evolution").Page("Page").WebEdit("searchQuery").Click
-'			else
-'				reporter.ReportEvent micPass, "Evolution Homepage", "The Evolution homepage is not opened, Test Pass!"
-'				Browser("Evolution").Close
-'				
-'			End If
-'
-'		else
-'			reporter.ReportEvent micPass, "Evolution Homepage", "The Evolution homepage is not opened, Test Pass!"
-'			Browser("Evolution").Close
-'			
-'		End If
 	
 End Function
 
 Function Storeselection(strStoreName,intStoreId)
 	
-		wait 3
-		If Browser("Evolution").Page("Evolution").WebEdit("store").Exist(3) Then
-			Browser("Evolution").Page("Evolution").WebEdit("store").Set intStoreId'"101"
-			reporter.ReportEvent micPass, "Evolution Store entered", "The Evolution Store is not Entered successfully, Test Pass!"
-		else
-			reporter.ReportEvent micFail, "Evolution id Store not exist", "The Evolution Store is not exist and closed the evolution, Test Failed!"
-			'Browser("Evolution").Close
-		End If
-		
-		wait 4
-	
-	If Browser("Evolution").Page("Evolution").WebList("mat-autocomplete-1").Exist(3) Then
-			'Browser("Evolution").Page("Evolution").WebList("mat-autocomplete-1").Select "#0"
-			
-			StrAllItems = Split(Browser("Evolution").Page("Evolution").WebList("mat-autocomplete-1").GetRoProperty("all items"),";")
-				For intCounter = Lbound(StrAllItems) to Ubound(StrAllItems)
-					'strStoreName
-	   				If trim(Browser("Evolution").Page("Evolution").WebList("mat-autocomplete-1").GetItem(intCounter+1))= trim(strStoreName) Then
-	            		Browser("Evolution").Page("Evolution").WebList("mat-autocomplete-1").Select (intCounter)
-	            	Exit For
-	   				End If
-				Next
-		End If
-		
-		If Browser("Evolution").Page("Evolution").WebButton("Submit").Exist(3) Then
-			wait 2
-			Browser("Evolution").Page("Evolution").WebButton("Submit").Click
-		End If
+	If Browser("Evolution").Page("Evolution").WebEdit("store").Exist(90) Then
+		Browser("Evolution").Page("Evolution").WebEdit("store").Set intStoreId  '"101"
+		Reporter.ReportEvent micPass, "Enter Evolution Store ID", "Entered the evolution store ID and store ID "&intStoreId
+	Else
+		Reporter.ReportEvent micFail, "Enter the Evolution store ID", "The Evolution store ID page is not loaded"
+	End If
+	Wait 3
+	If Browser("Evolution").Page("Evolution").WebList("mat-autocomplete-0").Exist(30) Then	
+		StrAllItems = Split(Browser("Evolution").Page("Evolution").WebList("mat-autocomplete-0").GetRoProperty("all items"),";")
+		Browser("Evolution").Page("Evolution").WebList("mat-autocomplete-1").Select (0)
+		wait 2
+	End If
+	Wait 3	 
+	If Browser("Evolution").Page("Evolution").WebButton("Submit").Exist(30) Then
+		Browser("Evolution").Page("Evolution").WebButton("Submit").Click
+	End If
 	
 End Function
 
@@ -262,7 +240,7 @@ Function StoreselectionAnother(strChangeStoreName,strAnotherStoreId)
 	
 		wait 3
 		
-			If Browser("Evolution").Page("Evolution").WebEdit("store").Exist(3) Then
+		If Browser("Evolution").Page("Evolution").WebEdit("store").Exist(3) Then
 			Browser("Evolution").Page("Evolution").WebEdit("store").Set strAnotherStoreId'"101"
 			reporter.ReportEvent micPass, "Evolution Store entered", "The Evolution Store is not Entered successfully, Test Pass!"
 		else
@@ -335,21 +313,42 @@ End If
 	
 End Function
 
+'###################################################################################################################
+'Function Name: EvolutionLoginBrowser
+'Function Description: EvolutionLoginBrowser
+'Designed By Date:RAMESH Thota
+'Designed Date(MM/DD/YY): 04/26/2021
+'Modified By&date: When do some change need to update here
+'###################################################################################################################
 Function EvolutionLoginBrowser(strUsername,strPassword,strURL,intStoreId,strAnotherStoreId,strStoreName,strChangeStoreName)
 
-'	systemutil.Run "iexplore.exe",strURL
-	wait 5
-	
 	Call Storeselection(strStoreName,intStoreId)
-	
 	Call LoginIntoEvolution(strUsername,strPassword)
-	
-	Call JustLogMein()	
-	
-	Call HomePageCheck()
+	Call fnVerifyEvolutionHomepage()
 	
 End Function
+'###################################################################################################################
+'Function Name: fnVerifyEvolutionHomepage
+'Function Description: fnVerifyEvolutionHomepage
+'Designed By Date:RAMESH Thota
+'Designed Date(MM/DD/YY): 04/26/2021
+'Modified By&date: When do some change need to update here
+'###################################################################################################################
+Function fnVerifyEvolutionHomepage()
+	If Browser("Evolution").Page("Page").Link("Click here to re-try loading").Exist(30) Then
+		Reporter.ReportEvent micPass,"Evolution home Page should display","Evolution home Page has displayed successfully"
+	Else
+		Reporter.ReportEvent micFail,"Evolution home Page should display","Evolution home Page is not displayed"
+	End If
+End Function
 
+'###################################################################################################################
+'Function Name: EvolutionLoginBrowser
+'Function Description: EvolutionLoginBrowser
+'Designed By Date:RAMESH Thota
+'Designed Date(MM/DD/YY): 04/26/2021
+'Modified By&date: When do some change need to update here
+'###################################################################################################################
 Function EvolutionLoginOopsCheck(strUsername,strPassword,strURL)
 
 	Call OopsCheckEvolution(strURL)
@@ -388,344 +387,745 @@ Function EvolutionLoginOopsCheck(strUsername,strPassword,strURL)
 'End If
 	
 End Function 
-	
-	
-
-
-Function LaunchEvolutionFromXstore()
-
-Print "Entered Function"
-If JavaWindow("Oracle Retail Xstore Point").JavaButton("Evolution").Exist(2) Then
-	JavaWindow("Oracle Retail Xstore Point").JavaButton("Evolution").Click
-End If
-	
-	
-	
-End Function
-
+'###################################################################################################################
+'Function Name: LaunchNC
+'Function Description: LaunchNC
+'Designed By Date:RAMESH Thota
+'Designed Date(MM/DD/YY): 04/26/2021
+'Modified By&date: When do some change need to update here
+'###################################################################################################################	
 Function LaunchNC()
-	Wait 5
-	Browser("Browser").Page("Page").WebElement("NC_QuickLink").Click
+	If Browser("Browser").Page("Page").WebElement("NC_QuickLink").Exist(30) Then
+		Browser("Browser").Page("Page").WebElement("NC_QuickLink").Click
+		Reporter.ReportEvent micPass,"Click on QuickLinks","Clicked on Quick Links"
+	Else
+		Reporter.ReportEvent micFail,"Click on QuickLinks","Clicked on Quick Links"
+	End If
 	Wait 1
 	Browser("Browser").Page("Page").Link("Sales").HoverTap
 	Wait 1
-	Browser("Browser").Page("Page").Link("NC New Consumer Sale").Click
-	
-
+	If Browser("Browser").Page("Page").Link("NC New Consumer Sale").Exist(30) Then
+		Browser("Browser").Page("Page").Link("NC New Consumer Sale").Click
+		Reporter.ReportEvent micPass, "Click on NC New Consumer Sale link","Clicked on NC New Consumer Sale link"
+	Else
+		Reporter.ReportEvent micFail, "Click on NC New Consumer Sale link","Clicked on NC New Consumer Sale link"
+	End If
 End Function
 
+
+'###################################################################################################################
+'Function Name: scanPLUSearch
+'Function Description: Enter PLU Number
+'Designed By Date:RAMESH Thota
+'Designed Date(MM/DD/YY): 04/26/2021
+'Modified By&date: When do some change need to update here
+'###################################################################################################################
 Function scanPLUSearch(intPLU)
-	Wait 8
-	Browser("Browser_2").Page("Page").Frame("eposTab&&0Frame").WebButton("Scan / PLU").Click
-	Wait 2
-	Browser("Browser_2").Page("Page").Frame("eposTab&&0Frame").WebEdit("Search.").Click
-	Browser("Browser_2").Page("Page").Frame("eposTab&&0Frame").WebEdit("Search.").Set intPLU
-	Wait 2
-	Browser("Evolution").Page("Page").Frame("eposTab&&0Frame").WebButton("Search.").Click
-
-
+'	Browser("Browser").Page("Page").Frame("eposTab&&0Frame").WebButton("Scan / PLU").WaitProperty "Name","Scan.*",20000
+	If Browser("Browser").Page("Page").Frame("eposTab&&0Frame").WebButton("Scan / PLU").Exist(60) Then
+		Browser("Browser").Page("Page").Frame("eposTab&&0Frame").WebButton("Scan / PLU").Click
+	End If
+	Wait 1
+	If Browser("Browser").Page("Page").Frame("eposTab&&0Frame").WebEdit("Search.").Exist(60) Then
+		Browser("Browser").Page("Page").Frame("eposTab&&0Frame").WebEdit("Search.").Click
+	End If
+	Wait 1
+	If Browser("Browser").Page("Page").Frame("eposTab&&0Frame").WebEdit("placeholder:=Enter PLU").Exist(60) Then
+		Browser("Browser").Page("Page").Frame("eposTab&&0Frame").WebEdit("placeholder:=Enter PLU").Set intPLU
+	End If
+	wait 1
+	If Browser("Browser").Page("Page").Frame("eposTab&&0Frame").WebElement("class:=o2uk-search__icon_search").Exist(60) Then
+		Browser("Browser").Page("Page").Frame("eposTab&&0Frame").WebElement("class:=o2uk-search__icon_search").Click
+	End If
 End Function
 
 
+'###################################################################################################################
+'Function Name: ScannedProductDetailsPage
+'Function Description: ScannedProductDetailsPage
+'Designed By Date:RAMESH Thota
+'Designed Date(MM/DD/YY): 04/26/2021
+'Modified By&date: When do some change need to update here
+'###################################################################################################################
+Function ScannedProductDetailsPage()
+	If Browser("Browser").Page("Page").Frame("eposTab&&0Frame").WebButton("value:= View product details ").Exist(60) Then
+		Browser("Browser").Page("Page").Frame("eposTab&&0Frame").WebButton("value:= View product details ").Click
+	End If
+'	If Browser("Browser").Page("Page").Frame("eposTab&&0Frame").WebTabStrip("WebTabStrip").Exist() Then
+'		Reporter.ReportEvent micPass,"Product details page is displayed","Step Passed"
+'	End If
+End Function
 
 Function NCSearchProductsinListingsPage(strDeviceName)
-	Wait 3
-	Browser("Evolution").Page("Page").Frame("eposTab&&0Frame").WebEdit("Search").Set strDeviceName
-	Wait 2
-	Browser("Evolution").Page("Page").Frame("eposTab&&0Frame").WebButton("Start search_2").Click
-
+	If Browser("Evolution").Page("Page").Frame("eposTab&&0Frame").WebEdit("Search").Exist(60) Then
+		Browser("Evolution").Page("Page").Frame("eposTab&&0Frame").WebEdit("Search").Set strDeviceName
+	End If
 	
+	If Browser("Evolution").Page("Page").Frame("eposTab&&0Frame").WebButton("Start search_2").Exist(30) Then
+		wait 2
+		Browser("Evolution").Page("Page").Frame("eposTab&&0Frame").WebButton("Start search_2").Click
+	End If
+	
+
+
 End Function
 
 Function NCSelectSimType(strSimType)
-	
 	If (strSimType="eSim") Then
-		Browser("Evolution").Page("Page").Frame("eposTab&&0Frame_2").WebElement("eSIM").Click
+		Browser("Evolution").Page("Page").Frame("eposTab&&0Frame").WebElement("eSIM").Click
 	ElseIf (strSimType="Plastic Sim") Then
-	Browser("Evolution").Page("Page").Frame("eposTab&&0Frame_2").WebElement("Plastic SIM").Click
-		Else
-	Reporter.ReportEvent micPass, "No Selection", "Default selection"
-
-
+		Browser("Evolution").Page("Page").Frame("eposTab&&0Frame").WebElement("Plastic SIM").Click
+	Else
+		Reporter.ReportEvent micPass, "No Selection", "Default selection"
 	End If
-	
 	Wait 2
-	
-	
 End Function
 
-Function ScannedProductDetailsPage()
-	Browser("Evolution").Page("Page").Frame("eposTab&&0Frame").WebButton("View product details").Click
-	Wait 3
-	If Browser("Evolution").Page("Page").Frame("eposTab&&0Frame_3").WebTabStrip("WebTabStrip").Exist(2) Then
-		Reporter.ReportEvent micPass,"Product details page is displayed","Step Passed"
-	End If
 
-End Function
-
+'###################################################################################################################
+'Function Name: ProductTariffSelection
+'Function Description: ProductTariffSelection
+'Designed By Date:RAMESH Thota
+'Designed Date(MM/DD/YY): 04/27/2021
+'Modified By&date: When do some change need to update here
+'###################################################################################################################
 Function ProductTariffSelection()
-Set objShell=CreateObject("WScript.Shell")
-objShell.SendKeys "{PGDN}"
-
-
-If Browser("Evolution").Page("Page").Frame("eposTab&&0Frame_3").WebButton("Select this plan").Exist(2) Then
-	Browser("Evolution").Page("Page").Frame("eposTab&&0Frame_3").WebButton("Select this plan").Click
-ElseIf Browser("Browser").Page("Page").Frame("Frame").WebButton("Select this plan").Exist(2) Then
-	Browser("Browser").Page("Page").Frame("Frame").WebButton("Select this plan").Click	
-End If	
-
+	Set objShell=CreateObject("WScript.Shell")
+	objShell.SendKeys "{PGDN}"
+	wait 2
+	If Browser("Browser").Page("Page").Frame("eposTab&&0Frame").WebButton("Select this plan").Exist(90) Then
+		Browser("Browser").Page("Page").Frame("eposTab&&0Frame").WebButton("Select this plan").Click
+	End If	
+	Set objShell=Nothing
 End Function
-
+'###################################################################################################################
+'Function Name: ProductNavtoGoToBasket
+'Function Description: ProductNavtoGoToBasket
+'Designed By Date:RAMESH Thota
+'Designed Date(MM/DD/YY): 04/26/2021
+'Modified By&date: When do some change need to update here
+'###################################################################################################################
 Function ProductNavtoGoToBasket()
-Wait 5
-Set objShell=CreateObject("WScript.Shell")
-For i = 0 To 8 
-	objShell.SendKeys "{PGDN}"
-Next
-
-	
-	if Browser("Browser").Page("Page").Frame("Frame_2").WebButton("Add to basket").Exist(2) Then
-		Browser("Browser").Page("Page").Frame("Frame_2").WebButton("Add to basket").Click
-		
-	Elseif Browser("Evolution").Page("Page").Frame("eposTab&&0Frame_4").WebButton("Add to basket").Exist(2) Then
-		Browser("Evolution").Page("Page").Frame("eposTab&&0Frame_4").WebButton("Add to basket").Click
+	If Browser("Browser").Page("Page").Frame("eposTab&&0Frame").WebButton("Add to basket").Exist(60) Then
+		Browser("Browser").Page("Page").Frame("eposTab&&0Frame").WebButton("Add to basket").Click
 	End If
 	Wait 5
-	strVal = Browser("Evolution").Page("Page").Frame("eposTab&&0Frame_5").WebElement("The basket has 1 item").GetROProperty("innertext")
-	If instr(strVal,"basket")=0 Then
-		Reporter.ReportEvent micPass, "Basket Page is displayed", "Step Passed"
-		
+	If Browser("Browser").Page("Page").Frame("eposTab&&0Frame").WebElement("The basket has 1 item").Exist(60) Then
+		strVal = Browser("Browser").Page("Page").Frame("eposTab&&0Frame").WebElement("The basket has 1 item").GetROProperty("innertext")
+		If instr(strVal,"basket")=0 Then
+			Reporter.ReportEvent micPass, "Basket Page is displayed", "Step Passed"
+		End If
 	End If
-
 End Function
-
+'###################################################################################################################
+'Function Name: ProductNavToCreateAccountPage
+'Function Description: ProductNavToCreateAccountPage
+'Designed By Date:RAMESH Thota
+'Designed Date(MM/DD/YY): 04/28/2021
+'Modified By&date: When do some change need to update here
+'###################################################################################################################
 Function ProductNavToCreateAccountPage()
-Wait 7
-Set objShell=CreateObject("WScript.Shell")
-For i = 0 To 3
-	objShell.SendKeys "{PGDN}"
-Next
-	Browser("Evolution").Page("Page").Frame("eposTab&&0Frame_5").WebButton("Check out").Click
+
+	If Browser("Browser").Page("Page").Frame("eposTab&&0Frame").WebButton("Check out").Exist(90) Then
+		wait 2
+		Browser("Browser").Page("Page").Frame("eposTab&&0Frame").WebButton("Check out").Click
+	End If
+	
 	Wait 5
-	If Browser("Evolution").Page("Page").Frame("Frame").WebElement("Create an account for").Exist(2) Then
-		Reporter.ReportEvent micPass, "Create Account Page is displayed","Step Passed"
-		
+	If Browser("Browser").Page("Page").Frame("Email").WebEdit("login_hint").Exist(90) Then
+		Reporter.ReportEvent micPass, "Navigate to email entry page","Email entry page is displayed"
+	Else
+		Reporter.ReportEvent micFail, "Navigate to email entry page","Email entry page is not displayed"
 	End If
 
 End Function
 
 Function ProductEnterEmailID(stremailID)
-	Browser("Evolution").Page("Page").Frame("Frame").WebEdit("login_hint").Set stremailID
-	Wait 2
-	Browser("Evolution").Page("Page").Frame("Frame").WebButton("Continue").Click
-	Wait 90
-
+	If Browser("Browser").Page("Page").Frame("Email").WebEdit("login_hint").Exist(90) Then
+		Browser("Browser").Page("Page").Frame("Email").WebEdit("login_hint").Set stremailID
+	End If
+		Wait 2
+	If Browser("Browser").Page("Page").Frame("Email").WebButton("Continue").Exist(10) Then
+		Browser("Browser").Page("Page").Frame("Email").WebButton("Continue").Click
+	End If
+	If Browser("Browser").Page("Page").Frame("eposTab&&0Frame").WebEdit("fname").Exist(150) Then
+		Reporter.ReportEvent micPass,"Navigate to customer Details page","Navigated to customer Details page successfully"
+	Else	
+		Reporter.ReportEvent micFail,"Navigate to customer Details page","Not naviagted to Customer Details page, cross verify the page"
+	End If
 End Function
-
+'###################################################################################################################
+'Function Name: CustomerDetailsPage
+'Function Description: CustomerDetailsPage
+'Designed By Date:RAMESH Thota
+'Designed Date(MM/DD/YY): 04/29/2021
+'Modified By&date: When do some change need to update here
+'###################################################################################################################
 Function CustomerDetailsPage(strFirstName,strLastName,dtDate,intMobileNumber,intHouseNumber,intPostCode)
-	
 
-	Browser("Evolution").Page("Page").Frame("eposTab&&0Frame_6").WebEdit("Select title...").Set "Mr"
+	Browser("Browser").Page("Page").Frame("eposTab&&0Frame").WebEdit("Select title...").Set "Mr"
 	Wait 2
-	If Browser("Evolution").Page("Page").Frame("Frame_3").WebEdit("fname").Exist(2) Then
-		Browser("Evolution").Page("Page").Frame("Frame_3").WebEdit("fname").Set strFirstName
-	ElseIf Browser("Evolution").Page("Page").Frame("eposTab&&0Frame_6").WebEdit("Customer's name").Exist(2) Then
-		Browser("Evolution").Page("Page").Frame("eposTab&&0Frame_6").WebEdit("Customer's name").Set strFirstName
+	If Browser("Browser").Page("Page").Frame("eposTab&&0Frame").WebEdit("fname").Exist(2) Then
+		Browser("Browser").Page("Page").Frame("eposTab&&0Frame").WebEdit("fname").Set strFirstName
 	End If	
-	Wait 2
 	
-	if Browser("Evolution").Page("Page").Frame("Frame_3").WebEdit("lname").Exist(2) Then
-		Browser("Evolution").Page("Page").Frame("Frame_3").WebEdit("lname").Set strLastName
-	ElseIf Browser("Evolution").Page("Page").Frame("eposTab&&0Frame_6").WebEdit("Customer's surname").Exist(2) Then
-		Browser("Evolution").Page("Page").Frame("eposTab&&0Frame_6").WebEdit("Customer's surname").Set strLastName
+	If Browser("Browser").Page("Page").Frame("eposTab&&0Frame").WebEdit("lname").Exist(2) Then
+		Browser("Browser").Page("Page").Frame("eposTab&&0Frame").WebEdit("lname").Set strLastName
 	End If
-	
-	Wait 2
-	If  Browser("Evolution").Page("Page").Frame("Frame_3").WebEdit("bday").Exist(2)Then
-		Browser("Evolution").Page("Page").Frame("Frame_3").WebEdit("bday").Set dtDate
-	ElseIf Browser("Evolution").Page("Page").Frame("eposTab&&0Frame_6").WebEdit("DD/MM/YYYY").Exist(2) Then
-		Browser("Evolution").Page("Page").Frame("eposTab&&0Frame_6").WebEdit("DD/MM/YYYY").Set dtDate
+	If  Browser("Browser").Page("Page").Frame("eposTab&&0Frame").WebEdit("bday").Exist(2)Then
+		Browser("Browser").Page("Page").Frame("eposTab&&0Frame").WebEdit("bday").Set dtDate
 	End If
-	
 	Wait 2
-	
-	If Browser("Evolution").Page("Page").Frame("Frame_3").WebEdit("tel").Exist(2) Then
-		Browser("Evolution").Page("Page").Frame("Frame_3").WebEdit("tel").Set intMobileNumber
-	ElseIf Browser("Evolution").Page("Page").Frame("eposTab&&0Frame_6").WebEdit("A UK mobile number").Exist(2) Then
-	 	Browser("Evolution").Page("Page").Frame("eposTab&&0Frame_6").WebEdit("A UK mobile number").Set intMobileNumber
+	If Browser("Browser").Page("Page").Frame("eposTab&&0Frame").WebEdit("tel").Exist(10) Then
+		Browser("Browser").Page("Page").Frame("eposTab&&0Frame").WebEdit("tel").Set intMobileNumber
 	End If
-	
- 	Wait 2
- 	If Browser("Evolution").Page("Page").Frame("Frame_3").WebEdit("address").Exist(2) Then
- 		Browser("Evolution").Page("Page").Frame("Frame_3").WebEdit("address").Set intHouseNumber
- 	ElseIf Browser("Evolution").Page("Page").Frame("eposTab&&0Frame_6").WebEdit("Optional").Exist(2) Then
- 		Browser("Evolution").Page("Page").Frame("eposTab&&0Frame_6").WebEdit("Optional").Set intHouseNumber
+ 	If Browser("Browser").Page("Page").Frame("eposTab&&0Frame").WebEdit("address").Exist(10) Then
+ 		Browser("Browser").Page("Page").Frame("eposTab&&0Frame").WebEdit("address").Set intHouseNumber
   	End If
-	
-	Wait 2
-	
-	If Browser("Evolution").Page("Page").Frame("Frame_3").WebEdit("postal").Exist(2) Then
-		Browser("Evolution").Page("Page").Frame("Frame_3").WebEdit("postal").Set intPostCode
-	ElseIf Browser("Evolution").Page("Page").Frame("eposTab&&0Frame_6").WebEdit("UK postcode").Exist(2) Then
-		Browser("Evolution").Page("Page").Frame("eposTab&&0Frame_6").WebEdit("UK postcode").Set intPostCode	
+	If Browser("Browser").Page("Page").Frame("eposTab&&0Frame").WebEdit("postal").Exist(10) Then
+		Browser("Browser").Page("Page").Frame("eposTab&&0Frame").WebEdit("postal").Set intPostCode
 	End If
-	
-	Wait 2
-	
-	if Browser("Evolution").Page("Page").Frame("Frame_3").WebButton("Find").Exist(2) Then
-		Browser("Evolution").Page("Page").Frame("Frame_3").WebButton("Find").Click
-	ElseIf Browser("Evolution").Page("Page").Frame("eposTab&&0Frame_6").WebButton("Find").Exist(2) Then
-		Browser("Evolution").Page("Page").Frame("eposTab&&0Frame_6").WebButton("Find").Click
+	If Browser("Browser").Page("Page").Frame("eposTab&&0Frame").WebButton("Find").Exist(10) Then
+		Browser("Browser").Page("Page").Frame("eposTab&&0Frame").WebButton("Find").Click
 	End If
-	
-	Wait 2
-	if Browser("Browser_2").Page("Page").Frame("Frame_4").WebList("Addressselect").Exist(2) Then
-		Browser("Browser_2").Page("Page").Frame("Frame_4").WebList("Addressselect").Select "#3"
-	ElseIf Browser("Evolution").Page("Page").Frame("eposTab&&0Frame_6").WebList("select").Exist(2) Then
-		Browser("Evolution").Page("Page").Frame("eposTab&&0Frame_6").WebList("select").Select "#3"
+	wait 5
+	if Browser("Browser").Page("Page").Frame("eposTab&&0Frame").WebList("Addressselect").Exist(10) Then
+		Browser("Browser").Page("Page").Frame("eposTab&&0Frame").WebList("Addressselect").Select "#1"
 	End If
-	Wait 2
-	
-	If Browser("Evolution").Page("Page").Frame("Frame_3").WebButton("Confirm and continue").Exist(2) Then
-		Browser("Evolution").Page("Page").Frame("Frame_3").WebButton("Confirm and continue").Click
-	ElseIf Browser("Evolution").Page("Page").Frame("eposTab&&0Frame_6").WebButton("Confirm and continue").Exist(2) Then
-		Browser("Evolution").Page("Page").Frame("eposTab&&0Frame_6").WebButton("Confirm and continue").Click
+	If Browser("Browser").Page("Page").Frame("eposTab&&0Frame").WebButton("Confirm and continue").Exist(10) Then
+		Browser("Browser").Page("Page").Frame("eposTab&&0Frame").WebButton("Confirm and continue").Click
 	End If
-	
-	Wait 5
-	
+	If Browser("Browser").Page("Page").Frame("eposTab&&0Frame").WebEdit("Enter_IMEI").Exist(90) Then	
+		wait 5
+		Reporter.ReportEvent micPass,"Navigate to IMEI and SSN entry page","Navigated to IMEI and SSN entry Details page successfully"
+	Else	
+		Reporter.ReportEvent micFail,"Navigate to IMEI and SSN entry page","Not naviagted to IMEI and SSN entry Details page, cross verify the page"
+	End If
 End Function
-
+'###################################################################################################################
+'Function Name: selectionIMEIorSSNoreSIM
+'Function Description: selectionIMEIorSSNoreSIM
+'Designed By Date:RAMESH Thota
+'Designed Date(MM/DD/YY): 04/26/2021
+'Modified By&date: When do some change need to update here
+'###################################################################################################################
 Function selectionIMEIorSSNoreSIM(strJourney,intIMEI,intSSN)
 
-If (strJourney="Device") Then
-	Browser("Evolution").Page("Page").Frame("eposTab&&0Frame_6").WebEdit("WebEdit").Set intIMEI
-	Wait 2
-	Browser("Browser_2").Page("Page").Frame("eposTab&&0Frame_6").WebEdit("SSN").Set intSSN
-ElseIf (strJourney="Simo") Then
-	Print "Enter simo statements"
-ElseIf (strJourney="Accessory") Then
-	Print "Enter Accessory statements"
-End If
+	If (strJourney="Device") Then
+		If Browser("Browser").Page("Page").Frame("eposTab&&0Frame").WebElement("IMEI Box").Exist(90) Then
+			Browser("Browser").Page("Page").Frame("eposTab&&0Frame").WebElement("IMEI Box").Click
+			End  If
+			Wait 2
+		If Browser("Browser").Page("Page").Frame("eposTab&&0Frame").WebEdit("Enter_IMEI").Exist(90) Then
+			Browser("Browser").Page("Page").Frame("eposTab&&0Frame").WebEdit("Enter_IMEI").Set intIMEI
+			End  If
+			Wait 2
+		If Browser("Browser").Page("Page").Frame("eposTab&&0Frame").WebElement("SSN Box").Exist(90) Then
+			Browser("Browser").Page("Page").Frame("eposTab&&0Frame").WebElement("SSN Box").Click
+			End  If
+			Wait 2
+		If Browser("Browser").Page("Page").Frame("eposTab&&0Frame").WebEdit("Enter_SSN").Exist(90) Then
+			Browser("Browser").Page("Page").Frame("eposTab&&0Frame").WebEdit("Enter_SSN").Set intSSN
+			End  If
+			
+'		If Browser("Browser").Page("Page").Frame("eposTab&&0Frame").WebEdit("WebEdit").Exist(90) Then	
+'			Browser("Browser").Page("Page").Frame("eposTab&&0Frame").WebEdit("WebEdit").Set intIMEI
+'			Wait 2
+'			Browser("Browser").Page("Page").Frame("eposTab&&0Frame").WebEdit("SSN").Set intSSN
+'		End If
+	ElseIf (strJourney="Simo") Then
+		Print "Enter simo statements"
+	ElseIf (strJourney="Accessory") Then
+		Print "Enter Accessory statements"
+	End If
 	
-Wait 5
-If Browser("Evolution").Page("Page").Frame("eposTab&&0Frame_6").WebElement("Confirm and continue").Exist(2) Then
-	Browser("Evolution").Page("Page").Frame("eposTab&&0Frame_6").WebElement("Confirm and continue").HoverTap
-	Browser("Evolution").Page("Page").Frame("eposTab&&0Frame_6").WebElement("Confirm and continue").Click
-End If
-
-Wait 15
-
-
+	If Browser("Browser").Page("Page").Frame("eposTab&&0Frame").WebElement("Confirm and continue").Exist(60) Then
+		Browser("Browser").Page("Page").Frame("eposTab&&0Frame").WebElement("Confirm and continue").HoverTap
+		Browser("Browser").Page("Page").Frame("eposTab&&0Frame").WebElement("Confirm and continue").Click
+	End If
+	If Browser("Browser").Page("Page").Frame("eposTab&&0Frame").WebButton("Continue").Exist(30) Then
+		Reporter.ReportEvent micPass,"Navigate to Reserve Order page","Navigated to Reserve Order page successfully"
+	Else	
+		Reporter.ReportEvent micFail,"Navigate to Reserve Order page","Not naviagted to Reserve Order page, cross verify the page"
+	End If	
 End Function
-
+'###################################################################################################################
+'Function Name: ReserveOrder
+'Function Description: ReserveOrder
+'Designed By Date:RAMESH Thota
+'Designed Date(MM/DD/YY): 04/30/2021
+'Modified By&date: When do some change need to update here
+'###################################################################################################################
 Function ReserveOrder()
 
-If Browser("Evolution").Page("Page").Frame("eposTab&&0Frame_6").WebButton("Continue").Exist(2) Then
-	Browser("Evolution").Page("Page").Frame("eposTab&&0Frame_6").WebButton("Continue").HoverTap
-	Browser("Evolution").Page("Page").Frame("eposTab&&0Frame_6").WebButton("Continue").Click
-End If
+	If Browser("Browser").Page("Page").Frame("eposTab&&0Frame").WebButton("Continue").Exist(60) Then
+		Browser("Browser").Page("Page").Frame("eposTab&&0Frame").WebButton("Continue").HoverTap
+		Browser("Browser").Page("Page").Frame("eposTab&&0Frame").WebButton("Continue").Click
+	End If
+	If Browser("Browser").Page("Page").Frame("eposTab&&0Frame").WebButton("Continue_2").Exist(10) Then
+		Browser("Browser").Page("Page").Frame("eposTab&&0Frame").WebButton("Continue_2").HoverTap
+		Browser("Browser").Page("Page").Frame("eposTab&&0Frame").WebButton("Continue_2").Click
+	End If
+	If Browser("Browser").Page("Page").Frame("eposTab&&0Frame").WebButton("Continue_2").Exist(5) Then
+		Browser("Browser").Page("Page").Frame("eposTab&&0Frame").WebButton("Continue_2").HoverTap
+		Browser("Browser").Page("Page").Frame("eposTab&&0Frame").WebButton("Continue_2").Click
+	End If
 	
-'Wait 15
-If Browser("Evolution").Page("Page").Frame("eposTab&&0Frame_6").WebElement("Please press 'Continue'").Exist(5) Then
-	Browser("Evolution").Page("Page").Frame("eposTab&&0Frame_6").WebButton("Continue").HoverTap
-	Browser("Evolution").Page("Page").Frame("eposTab&&0Frame_6").WebButton("Continue").Click
-End If
-Wait 3	
-If Browser("Evolution").Page("Page").Frame("eposTab&&0Frame_6").WebButton("Continue_2").Exist(10) Then
-	Browser("Evolution").Page("Page").Frame("eposTab&&0Frame_6").WebButton("Continue_2").HoverTap
-	Browser("Evolution").Page("Page").Frame("eposTab&&0Frame_6").WebButton("Continue_2").Click
-End If
-If Browser("Evolution").Page("Page").Frame("eposTab&&0Frame_6").WebButton("Continue_2").Exist(5) Then
-	Browser("Evolution").Page("Page").Frame("eposTab&&0Frame_6").WebButton("Continue_2").HoverTap
-	Browser("Evolution").Page("Page").Frame("eposTab&&0Frame_6").WebButton("Continue_2").Click
-End If
-If Browser("Evolution").Page("Page").Frame("eposTab&&0Frame_6").WebElement("Please press 'Continue'").Exist(2) Then
-	Wait 15
-	Browser("Evolution").Page("Page").Frame("eposTab&&0Frame_6").WebButton("Continue").HoverTap
-	Browser("Evolution").Page("Page").Frame("eposTab&&0Frame_6").WebButton("Continue").Click
-End If	
-Wait 3	
-If Browser("Evolution").Page("Page").Frame("eposTab&&0Frame_6").WebButton("Continue").Exist(2) Then
-	Browser("Evolution").Page("Page").Frame("eposTab&&0Frame_6").WebButton("Continue").HoverTap
-	Browser("Evolution").Page("Page").Frame("eposTab&&0Frame_6").WebButton("Continue").Click
-End If
-If Browser("Evolution").Page("Page").Frame("eposTab&&0Frame_6").WebElement("Please press 'Continue'").Exist(2) Then
-	Wait 15
-	Browser("Evolution").Page("Page").Frame("eposTab&&0Frame_6").WebButton("Continue").HoverTap
-	Browser("Evolution").Page("Page").Frame("eposTab&&0Frame_6").WebButton("Continue").Click
-End If	
-Wait 15
+	Set WshellOBJ = CreateObject("WScript.Shell")
+	WshellOBJ.SendKeys"{PgDn}"
+	
+	If Browser("Browser").Page("Page").Frame("eposTab&&0Frame").WebList("TimeAtAddress").Exist(50) Then
+		Reporter.ReportEvent micPass,"Navigate to Eligibility Check page","Navigated to Eligibility Check page successfully"
+	Else	
+		Reporter.ReportEvent micFail,"Navigate to Eligibility Check page","Not naviagted to Eligibility Check page, cross verify the page"
+	End If	
 End Function
-
+'###################################################################################################################
+'Function Name: EligibilityCheck
+'Function Description: EligibilityCheck
+'Designed By Date:RAMESH Thota
+'Designed Date(MM/DD/YY): 04/30/2021
+'Modified By&date: When do some change need to update here
+'###################################################################################################################
 Function EligibilityCheck()
-'	Browser("Browser_2").Page("Page").Frame("eposTab&&0Frame_6").WebList("TimeAtAddress").WaitProperty 
-	Browser("Browser_2").Page("Page").Frame("eposTab&&0Frame_6").WebList("TimeAtAddress").Select "#9"
-	Wait 2
-	Browser("Browser_2").Page("Page").Frame("eposTab&&0Frame_6").WebList("EmploymentStatus").Select "#1"
-	Wait 2
-	Browser("Browser_2").Page("Page").Frame("eposTab&&0Frame_6").WebList("AnnualIncome").Select "#5"
-	Wait 2
-	Browser("Browser_2").Page("Page").Frame("eposTab&&0Frame_6").WebElement("SecciCheck").Click
-	Wait 3
-	Browser("Evolution").Page("Page").Frame("eposTab&&0Frame_6").WebButton("Confirm and continue").HoverTap
-	Browser("Evolution").Page("Page").Frame("eposTab&&0Frame_6").WebButton("Confirm and continue").Click
-	Wait 5
 
-
-
-	
-	
-
-	
+	If Browser("Browser").Page("Page").Frame("eposTab&&0Frame").WebList("TimeAtAddress").Exist(10) Then
+		Browser("Browser").Page("Page").Frame("eposTab&&0Frame").WebList("TimeAtAddress").Select "#9"
+	End If
+	Wait 1
+	Browser("Browser").Page("Page").Frame("eposTab&&0Frame").WebList("EmploymentStatus").Select "#1"
+	Wait 1
+	Browser("Browser").Page("Page").Frame("eposTab&&0Frame").WebList("AnnualIncome").Select "#5"
+	Wait 1
+	Browser("Browser").Page("Page").Frame("eposTab&&0Frame").WebElement("SecciCheck").Click
+	Wait 1
+	Browser("Browser").Page("Page").Frame("eposTab&&0Frame").WebButton("Confirm and continue").HoverTap
+	Browser("Browser").Page("Page").Frame("eposTab&&0Frame").WebButton("Confirm and continue").Click
+	Wait 1
+	If Browser("Browser").Page("Page").Frame("eposTab&&0Frame").WebButton("I am the advisor").Exist(60) Then
+		Reporter.ReportEvent micPass,"Navigate to I am the advisor page","Navigated to I am the advisor page successfully"
+	Else	
+		Reporter.ReportEvent micFail,"Navigate to I am the advisor page","Not naviagted to I am the advisor page, cross verify the page"
+	End If
 End Function
-
+'###################################################################################################################
+'Function Name: AdvisorSteps
+'Function Description: AdvisorSteps
+'Designed By Date:RAMESH Thota
+'Designed Date(MM/DD/YY): 05/04/2021
+'Modified By&date: When do some change need to update here
+'###################################################################################################################
 Function AdvisorSteps()
-	If Browser("Evolution").Page("Page").Frame("eposTab&&0Frame_6").WebElement("Thanks for that!").Exist(3) Then
-		Browser("Evolution").Page("Page").Frame("eposTab&&0Frame_6").WebButton("I am the advisor").Click
-
+	If Browser("Browser").Page("Page").Frame("eposTab&&0Frame").WebButton("I am the advisor").Exist(30) Then
+		wait 2
+		Browser("Browser").Page("Page").Frame("eposTab&&0Frame").WebButton("I am the advisor").Click
 	End If
-	Browser("Evolution").Page("Page").Frame("eposTab&&0Frame_6").WebButton("Continue with eligibility").Click
-	Wait 5
-
+	wait 1
+	Browser("Browser").Page("Page").Frame("eposTab&&0Frame").WebButton("Continue with eligibility").Click
+	
+	If Browser("Browser").Page("Page").Frame("eposTab&&0Frame").WebEdit("8 number long").Exist(60) Then
+		Reporter.ReportEvent micPass,"Navigate to Account Details page","Navigated to Account Details page successfully"
+	Else	
+		Reporter.ReportEvent micFail,"Navigate to Account Details page","Not naviagted to Account Details page, cross verify the page"
+	End If
 End Function
-
+'###################################################################################################################
+'Function Name: DirectDebitDetails
+'Function Description: DirectDebitDetails
+'Designed By Date:RAMESH Thota
+'Designed Date(MM/DD/YY): 05/04/2021
+'Modified By&date: When do some change need to update here
+'###################################################################################################################
 Function DirectDebitDetails(strAccountName,intAccountNumber,intSortCode)
-	If Browser("Evolution").Page("Page").Frame("eposTab&&0Frame_7").WebElement("This looks like the right").Exist(2) Then
-		Wait 2
-		Browser("Evolution").Page("Page").Frame("eposTab&&0Frame_7").WebEdit("As displayed in your account").Set strAccountName
-		Wait 2
-		Browser("Evolution").Page("Page").Frame("eposTab&&0Frame_7").WebEdit("8 number long").Set intAccountNumber
-		Wait 2
-		Browser("Browser_2").Page("Page").Frame("eposTab&&0Frame_7").WebEdit("00 - 00 - 00").Set intSortCode
-		Wait 2
-		Browser("Browser_2").Page("Page").Frame("eposTab&&0Frame_7").WebElement("CreditCheckCheckbox").Click
-		Wait 2
-		Browser("Browser_2").Page("Page").Frame("eposTab&&0Frame_7").WebElement("DirectDebitCheckBox").Click
-		Wait 2
-		Browser("Evolution").Page("Page").Frame("eposTab&&0Frame_6").WebButton("Confirm and continue").HoverTap
-		Browser("Evolution").Page("Page").Frame("eposTab&&0Frame_6").WebButton("Confirm and continue").Click
+	
+	Wait 1
+	Browser("Browser").Page("Page").Frame("eposTab&&0Frame").WebEdit("As displayed in your account").Set strAccountName
+	Wait 1
+	Browser("Evolution").Page("Page").Frame("ePOSTab&&0Frame").WebEdit("8 numbers long").Set intAccountNumber
 
-  
-
+	Wait 1
+	Browser("Browser").Page("Page").Frame("eposTab&&0Frame").WebEdit("00 - 00 - 00").Set intSortCode
+	Wait 1
+	Browser("Browser").Page("Page").Frame("eposTab&&0Frame").WebElement("CreditCheckCheckbox").Click
+	Wait 1
+	Browser("Browser").Page("Page").Frame("eposTab&&0Frame").WebElement("DirectDebitCheckBox").Click
+	Wait 1
+	Browser("Browser").Page("Page").Frame("eposTab&&0Frame").WebButton("Confirm and continue").HoverTap
+	Browser("Browser").Page("Page").Frame("eposTab&&0Frame").WebButton("Confirm and continue").Click
+	wait 20
+'	If Browser("Browser").Page("Page").Frame("CreditCheck").WebEdit("NOMTITULAR").Exist(120) Then
+'		Reporter.ReportEvent micPass,"Navigate to Credit check Details page","Navigated to Credit check Details page successfully"
+'	Else	
+'		Reporter.ReportEvent micFail,"Navigate to Credit check Details page","Not naviagted to Credit check Details page, cross verify the page"
+'	End If
+End Function
+'###################################################################################################################
+'Function Name: CreditCheckAndCardDeails
+'Function Description: CreditCheckAndCardDeails
+'Designed By Date:RAMESH Thota
+'Designed Date(MM/DD/YY): 05/04/2021
+'Modified By&date: When do some change need to update here
+'###################################################################################################################
+Function CreditCheckAndCardDeails(strAccountName,intCardNumber,intCVV)
+	wait 2
+	'Browser("Browser").Page("Page").Frame("eposTab&&0Frame").WebElement("CreditcheckAgreementOne").Click
+	If Browser("Browser").Page("Page").Frame("eposTab&&0Frame").WebElement("CreditcheckAgreementOne").Exist(2) Then
+    	Browser("Browser").Page("Page").Frame("eposTab&&0Frame").WebElement("CreditcheckAgreementOne").Click
+ 	End If
+	Wait 2
+	'Browser("Browser").Page("Page").Frame("eposTab&&0Frame").WebElement("CreditCheckAgreementTwo").Click
+	If Browser("Browser").Page("Page").Frame("eposTab&&0Frame").WebElement("CreditCheckAgreementTwo").Exist(2) Then
+    	Browser("Browser").Page("Page").Frame("eposTab&&0Frame").WebElement("CreditCheckAgreementTwo").Click
+ 	End If
+	Wait 2
+	Browser("Browser").Page("Page").Frame("CreditCheck").WebEdit("NOMTITULAR").Set strAccountName
+	Wait 1
+	Browser("Browser").Page("Page").Frame("CreditCheck").WebEdit("PAN").Set intCardNumber
+	wait 1
+	Browser("Browser").Page("Page").Frame("CreditCheck").WebList("EXPIRYDATEMONTH").Select "#8"
+	wait 1
+	Browser("Browser").Page("Page").Frame("CreditCheck").WebList("EXPIRYDATEYEAR").Select "#1"
+	wait 1
+	Browser("Browser").Page("Page").Frame("CreditCheck").WebEdit("CVC").Set intCVV
+	wait 1
+	Browser("Browser").Page("Page").Frame("CreditCheck").WebButton("Online verification").Click
+	wait 1
+	If Browser("Browser").Page("Page").Frame("eposTab&&0Frame").WebButton("Confirm and continue_CC").Exist(30) Then
+		Browser("Browser").Page("Page").Frame("eposTab&&0Frame").WebButton("Confirm and continue_CC").Click
 	End If
-	Wait 5
+	If Browser("Browser").Page("Page").Frame("eposTab&&0Frame").WebButton("Continue with credit search").Exist(30) Then
+		wait 2
+		Browser("Browser").Page("Page").Frame("eposTab&&0Frame").WebButton("Continue with credit search").Click
+	End If
+	If Browser("Browser").Page("Page").Frame("eposTab&&0Frame").WebButton("Confirm and continue_CC_Last").Exist(60) Then
+		wait 2
+		Browser("Browser").Page("Page").Frame("eposTab&&0Frame").WebButton("Confirm and continue_CC_Last").Click
+	End If
+	If Browser("Browser").Page("Page").Frame("eposTab&&0Frame").WebButton("Continue_MoreOptions").Exist(60) Then
+		Reporter.ReportEvent micPass,"Navigate to step3 more options page","Navigated to step3 more options page successfully"
+	Else	
+		Reporter.ReportEvent micFail,"Navigate to step3 more options page","Not naviagted to step3 more options page, cross verify the page"
+	End If
+End Function
+'###################################################################################################################
+'Function Name: MoreOption
+'Function Description: MoreOption
+'Designed By Date:RAMESH Thota
+'Designed Date(MM/DD/YY): 05/04/2021
+'Modified By&date: When do some change need to update here
+'###################################################################################################################
+Function MoreOption()
+	
+	If Browser("Browser").Page("Page").Frame("eposTab&&0Frame").WebButton("Continue_MoreOptions").Exist(20) Then
+		Browser("Browser").Page("Page").Frame("eposTab&&0Frame").WebButton("Continue_MoreOptions").Click
+	End If
+	If Browser("Browser").Page("Page").Frame("eposTab&&0Frame").WebButton("Continue_review_order").Exist(60) Then
+		Reporter.ReportEvent micPass,"Navigate to step4 review continue order page","Navigated to step4 review continue order page successfully"
+	Else	
+		Reporter.ReportEvent micFail,"Navigate to step4 review continue order page","Not naviagted to step4 review continue order page, cross verify the page"
+	End If
+
+End Function
+'###################################################################################################################
+'Function Name: CreditCheckAndCardDeails
+'Function Description: CreditCheckAndCardDeails
+'Designed By Date:RAMESH Thota
+'Designed Date(MM/DD/YY): 05/07/2021
+'Modified By&date: When do some change need to update here
+'###################################################################################################################
+Function ReviewDetails()
+	If Browser("Browser").Page("Page").Frame("eposTab&&0Frame").WebButton("Continue_review_order").Exist(60) Then
+		Browser("Browser").Page("Page").Frame("eposTab&&0Frame").WebButton("Continue_review_order").Click
+	End If
+	
+	If Browser("Browser").Page("Page").Frame("eposTab&&0Frame").WebButton("Continue_review_order_popup").Exist(60) Then
+		Browser("Browser").Page("Page").Frame("eposTab&&0Frame").WebButton("Continue_review_order_popup").Click
+	Else 	
+	End If
+	If Browser("Browser").Page("Page").Frame("eposTab&&0Frame").WebButton("Continue_Agreement").Exist(30) Then
+		Reporter.ReportEvent micPass,"Navigate to step5 Agreement page","Navigated to step5 Agreement page successfully"
+	Else
+		Reporter.ReportEvent micFail,"Navigate to step5 Agreement page","Not naviagted to step5 Agreement page, cross verify the page"
+	End If
+	
+End Function
+'###################################################################################################################
+'Function Name: AgreementDetails
+'Function Description: AgreementDetails
+'Designed By Date:RAMESH Thota
+'Designed Date(MM/DD/YY): 05/10/2021
+'Modified By&date: When do some change need to update here
+'###################################################################################################################
+Function AgreementDetails()
+
+	If Browser("Browser").Page("Page").Frame("eposTab&&0Frame").WebButton("name:=Continue","index:=0").Exist(30) Then
+		Browser("Browser").Page("Page").Frame("eposTab&&0Frame").WebButton("name:=Continue","index:=0").Click
+		'Browser("Browser").Page("Page").Frame("eposTab&&0Frame").WebButton("Continue_Agreement").Click
+	End If
+		Wait 2
+	If Browser("Browser").Page("Page").Frame("eposTab&&0Frame").WebButton("Continue_KeyInfo").Exist(60) Then
+		Browser("Browser").Page("Page").Frame("eposTab&&0Frame").WebButton("Continue_KeyInfo").Click
+	Else
+		Reporter.ReportEvent micFail,"Click on Key information continue button","Key information continue button does not exist"
+	End If
+		wait 2
+	
+	Set WshellOBJ = CreateObject("WScript.Shell")
+	WshellOBJ.SendKeys"{PgDn}"
+	
+	If Browser("Browser").Page("Page").Frame("eposTab&&0Frame").WebElement("PCCI").Exist(60) Then
+		Browser("Browser").Page("Page").Frame("eposTab&&0Frame").WebElement("PCCI").Highlight
+	End If
+		Wait 2
+	If Browser("Browser").Page("Page").Frame("eposTab&&0Frame").WebButton("name:=Read PCCI","index:=0").Exist(60) Then
+		Browser("Browser").Page("Page").Frame("eposTab&&0Frame").WebButton("name:=Read PCCI","index:=0").HoverTap
+		wait 2
+		Browser("Browser").Page("Page").Frame("eposTab&&0Frame").WebButton("name:=Read PCCI","index:=0").Click
+		Else
+		Reporter.ReportEvent micFail,"Click on Read PCCI button"," Read PCCI button does not exist"
+	End If
+		Wait 2
+	If Browser("Browser").Page("Page").Frame("ePOSTab&&0Frame").WebElement("I agree_2").Exist(60) Then
+		Browser("Browser").Page("Page").Frame("ePOSTab&&0Frame").WebElement("I agree_2").Click
+       Else
+        	Reporter.ReportEvent micFail,"Click on I agree button SECCI","I agree option does not exist in SECCI page"
+       End If
+       	Wait 2
+        If Browser("Browser").Page("Page").Frame("eposTab&&0Frame").WebButton("Continue_SECCI").Exist(60) Then
+	        Browser("Browser").Page("Page").Frame("eposTab&&0Frame").WebButton("Continue_SECCI").Click
+	 Else
+	        Reporter.ReportEvent micFail,"Click on continue button on CCA","Continue button does not exist in CCA page"
+	 End If
+	If Browser("Browser").Page("Page").Frame("eposTab&&0Frame").WebButton("Read the Consumer Credit").Exist(60) Then
+       	Browser("Browser").Page("Page").Frame("eposTab&&0Frame").WebButton("Read the Consumer Credit").Click
+     	Else
+       	Reporter.ReportEvent micFail,"Click on Read the consumer credit link","Read the consumer credit link does not exist"
+       End If
+    Wait 2
+    If Browser("Browser").Page("Page").Frame("ePOSTab&&0Frame").WebElement("I agree_2").Exist(60) Then
+        Browser("Browser").Page("Page").Frame("eposTab&&0Frame").WebButton("I agree_SECCI").Click
+        Else
+		Browser("Browser").Page("Page").Frame("ePOSTab&&0Frame").WebElement("I agree_2").Click
+'    	Else
+'        Reporter.ReportEvent micFail,"Click on I agree button SECCI","I agree option does not exist in SECCI page"
+    End If
+    	Wait 2
+    If Browser("Browser").Page("Page").Frame("eposTab&&0Frame").WebButton("Continue_CCA").Exist(60) Then
+        Browser("Browser").Page("Page").Frame("eposTab&&0Frame").WebButton("Continue_CCA").Click
+    Else
+        Reporter.ReportEvent micFail,"Click on continue button on CCA","Continue button does not exist in CCA page"
+    End If
+    	Wait 2
+    If Browser("Browser").Page("Page").Frame("eposTab&&0Frame").WebButton("Read Pay Monthly Mobile").Exist(60) Then
+    	 Browser("Browser").Page("Page").Frame("eposTab&&0Frame").WebButton("Read Pay Monthly Mobile").Click
+    Else
+    	Reporter.ReportEvent micFail,"Click on Read Pay Monthly Mobile link","Read Pay Monthly Mobile link does not exist"
+    End If
+    	Wait 5
+    If Browser("Browser").Page("Page").Frame("ePOSTab&&0Frame").WebElement("I agree_2").Exist(60) Then
+        Browser("Browser").Page("Page").Frame("eposTab&&0Frame").WebButton("I agree_SECCI").Click
+        Wait 4
+		Else
+			Browser("Browser").Page("Page").Frame("ePOSTab&&0Frame").WebElement("I agree_2").Click
+			'Reporter.ReportEvent micFail,"Click on I agree button SECCI","I agree option does not exist in SECCI page"
+    End If
+    	Wait 6
+    If Browser("Browser").Page("Page").Frame("eposTab&&0Frame").WebElement("Pay_Monthly_Agreement").Exist(60) Then
+        Browser("Browser").Page("Page").Frame("eposTab&&0Frame").WebElement("Pay_Monthly_Agreement").Click
+    Else
+        Reporter.ReportEvent micFail,"Select pay monthly agreement check box","pay monthly agreement check box does not exist in pay monthly agreement page"
+    End If
+    	Wait 2
+    If Browser("Browser").Page("Page").Frame("eposTab&&0Frame").WebElement("Check5G").Exist(60) Then
+        Browser("Browser").Page("Page").Frame("eposTab&&0Frame").WebElement("Check5G").Click
+    End If
+	Wait 2
+    If Browser("Browser").Page("Page").Frame("eposTab&&0Frame").WebButton("Continue_PayMnthly").Exist(60) Then
+        Browser("Browser").Page("Page").Frame("eposTab&&0Frame").WebButton("Continue_PayMnthly").Click
+    Else
+        Reporter.ReportEvent micFail,"Click on continue on Pay monthly page","continue button does not exist in pay monthly page"
+    End If
+    
+    '''''Below script applicable only for insurance if selected
+    	If Browser("Browser").Page("Page").Frame("eposTab&&0Frame").WebElement("Insurance Product Information").Exist(60) Then
+			Browser("Browser").Page("Page").Frame("eposTab&&0Frame").WebElement("Insurance Product Information").HoverTap
+			Wait 2
+		If Browser("Browser").Page("Page").Frame("eposTab&&0Frame").WebButton("View Insurance Product").Exist(60) Then
+    			Browser("Browser").Page("Page").Frame("eposTab&&0Frame").WebButton("View Insurance Product").Click
+    		End  If
+    			Wait 2
+    		If Browser("Browser").Page("Page").Frame("eposTab&&0Frame").WebElement("Insurance terms and conditions").Exist(60) Then
+    			Browser("Browser").Page("Page").Frame("eposTab&&0Frame").WebElement("Insurance terms and conditions").HoverTap
+    			Browser("Browser").Page("Page").Frame("eposTab&&0Frame").WebElement("Insurance terms and conditions").Click
+    		End  If
+    			Wait 4
+    		If Browser("Browser").Page("Page").Frame("eposTab&&0Frame").WebButton("I agree_IPID").Exist(60) Then
+    			Browser("Browser").Page("Page").Frame("eposTab&&0Frame").WebButton("I agree_IPID").HoverTap
+    			Browser("Browser").Page("Page").Frame("eposTab&&0Frame").WebButton("I agree_IPID").Click
+    		End  If
+    			Wait 2
+    		If Browser("Browser").Page("Page").Frame("eposTab&&0Frame").WebButton("Continue").Exist(60) Then
+    			Browser("Browser").Page("Page").Frame("eposTab&&0Frame").WebButton("Continue").Click
+    		End  If	
+	End If   
+	           Wait 2
+      '''''''''Main screen final button continue'''''''
+    If Browser("Browser").Page("Page").Frame("eposTab&&0Frame").WebButton("Continue_agreements_Final").Exist(60) Then
+        Browser("Browser").Page("Page").Frame("eposTab&&0Frame").WebButton("Continue_agreements_Final").Click
+    Else
+        Reporter.ReportEvent micFail,"Click on continue on agreement page","continue button does not exist in agreement page"
+    End If
+    	Wait 2	
+	If Browser("Browser").Page("Page").Frame("FinishAccSetUp").Link("Skip for now").Exist(60) Then
+		Reporter.ReportEvent micPass,"Navigate to FinishAccountSetup page","Navigated to FinishAccountSetup page successfully"
+	Else	
+		Reporter.ReportEvent micFail,"Navigate to FinishAccountSetup page","Not naviagted to FinishAccountSetup page, cross verify the page"
+	End If
+	
+End Function
+'###################################################################################################################
+'Function Name: FinishAccountSetup
+'Function Description: FinishAccountSetup
+'Designed By Date:RAMESH Thota
+'Designed Date(MM/DD/YY): 05/04/2021
+'Modified By&date: When do some change need to update here
+'###################################################################################################################
+Function FinishAccountSetup(strePassword,strSecurityAnswer)
+
+	If Browser("Browser").Page("Page").Frame("FinishAccSetUp").WebEdit("password").Exist(30) Then
+		Browser("Browser").Page("Page").Frame("FinishAccSetUp").WebEdit("password").Set strePassword
+	End If
+		Wait 2
+	If Browser("Browser").Page("Page").Frame("FinishAccSetUp").WebElement("securityQuestionSelectBoxItArr").Exist(30) Then
+		Browser("Browser").Page("Page").Frame("FinishAccSetUp").WebElement("securityQuestionSelectBoxItArr").Click
+		Wait 2
+		Browser("Browser").Page("Page").Frame("FinishAccSetUp").WebList("securityQuestionSelectBoxItOpt").Select(1)
+	End If
+		Wait 2
+	If Browser("Browser").Page("Page").Frame("FinishAccSetUp").WebEdit("securityAnswer").Exist(30) Then
+		Browser("Browser").Page("Page").Frame("FinishAccSetUp").WebEdit("securityAnswer").Set strSecurityAnswer
+	End If
+	
+	Wait 2
+	
+	If Browser("Browser").Page("Page").Frame("FinishAccSetUp").WebButton("Continue_FinalAccount").Exist(30) Then
+		Browser("Browser").Page("Page").Frame("FinishAccSetUp").WebButton("Continue_FinalAccount").Click
+	End If
+	
+	Wait 2
+	
+	'Browser("Browser").Page("Page").Frame("FinishAccSetUp").WebButton("Continue_Accountready").Click
+	If Browser("Browser").Page("Page").Frame("FinishAccSetUp").WebButton("name:=Continue").Exist(30) Then
+		Reporter.ReportEvent micPass,"Navigated to account created confirmation page","Account created Successfully"
+		Wait 2
+		Browser("Browser").Page("Page").Frame("FinishAccSetUp").WebButton("Continue_Accountready").Click
+		Else
+		Reporter.ReportEvent micFail,"Account not created","Step failed"
+	End If
+	
+	Wait 2
+	
+'	If Browser("Browser").Page("Page").Frame("FinishAccSetUp").Link("Skip for now").Exist(30) Then
+'		Browser("Browser").Page("Page").Frame("FinishAccSetUp").Link("Skip for now").Click
+'	End If
+	If Browser("Browser").Page("Page").Frame("eposTab&&0Frame").WebButton("Update transaction status").Exist(60) Then
+		Reporter.ReportEvent micPass,"Navigate to awaiting transaction confirmation page","Navigated to awaiting transaction confirmation page successfully"
+		Reporter.ReportEvent micPass,"Place the order and go to xstore to complete the payment","NC Order placed successfully and complete the payment in xstore"
+		wait 2
+'		intMobNum=Split(Browser("Browser").Page("Page").Frame("eposTab&&0Frame").WebElement("MobileNumber").GetROProperty("innertext"),":")(1)
+'		Reporter.ReportEvent micPass,"Get the Mobile Number","Mobile Number retireved from confirmation page successfully :"&intMobNum
+	Else	
+		Reporter.ReportEvent micFail,"Navigate to awaiting transaction confirmation page","Not naviagted to awaiting transaction confirmation page, cross verify the page"
+	End If
 End Function
 
-Function CreditCheckAndCardDeails(strAccountName,intCardNumber)
-Wait 5
-	Browser("Browser_2").Page("Page").Frame("eposTab&&0Frame_7").WebElement("CreditcheckAgreementOne").Click
-	Wait 5
-	Browser("Browser_2").Page("Page").Frame("eposTab&&0Frame_7").WebElement("CreditCheckAgreementTwo").Click
-	Wait 5
-	Browser("Browser_2").Page("Page").Frame("Frame_3").WebEdit("CardHolderName").Set strAccountName
-	Wait 2
-	Browser("Browser_2").Page("Page").Frame("Frame_3").WebEdit("CardNumber").Set intCardNumber
-	Wait 2
-	Browser("Browser_2").Page("Page").Frame("Frame_3").WebList("EXPIRYDATEMONTH").Select "#10"
-	Wait 2
-	Browser("Evolution").Page("Page").Frame("Frame_2").WebList("EXPIRYDATEMONTH").Select "#9"
 
+Function Discount_Apply()
+
+'Browser("Browser").Page("Page").Frame("ePOSTab&&0Frame").WebButton("Upfront options").Click
+If Browser("Browser").Page("Page").Frame("ePOSTab&&0Frame").WebButton("Upfront options").Exist(30) Then
+		Browser("Browser").Page("Page").Frame("ePOSTab&&0Frame").WebButton("Upfront options").Click
+	End If
+	Wait 2'Browser("Browser").Page("Page").Frame("eposTab&&0Frame").WebList("DiscountReason").Select
+
+If Browser("Browser").Page("Page").Frame("eposTab&&0Frame").WebList("DiscountReason").Exist(30) Then
+		Browser("Browser").Page("Page").Frame("eposTab&&0Frame").WebList("DiscountReason").Select "Goodwill"
+	End If
+	Wait 2
+If Browser("Browser").Page("Page").Frame("ePOSTab&&0Frame").WebEdit("Explain why you are giving").Exist(30) Then
+		Browser("Browser").Page("Page").Frame("ePOSTab&&0Frame").WebEdit("Explain why you are giving").Set "Test12345"
+	End If
+		wait 2
+If Browser("Browser").Page("Page").Frame("ePOSTab&&0Frame").WebEdit("e.g. ABC1232456").Exist(30) Then
+		Browser("Browser").Page("Page").Frame("ePOSTab&&0Frame").WebEdit("e.g. ABC1232456").Set "ABC12DE123456"
+	End If
+		wait 2
+		
+	'Browser("Browser").Page("Page").Frame("ePOSTab&&0Frame").WebElement("£0.00").Click
+If Browser("Browser").Page("Page").Frame("ePOSTab&&0Frame").WebElement("£0.00").Exist(30) Then
+		Browser("Browser").Page("Page").Frame("ePOSTab&&0Frame").WebElement("£0.00").Click
+	End If	
+		Wait 2
+		
+If Browser("Browser").Page("Page").Frame("eposTab&&0Frame").WebEdit("DiscountAmount").Exist(30) Then
+		Browser("Browser").Page("Page").Frame("eposTab&&0Frame").WebEdit("DiscountAmount").Click
+		Wait 3
+		Browser("Browser").Page("Page").Frame("eposTab&&0Frame").WebEdit("DiscountAmount").Set "30"
+	End If
+		wait 2
+
+If Browser("Browser").Page("Page").Frame("eposTab&&0Frame").WebElement("Apply discount").Exist(30) Then
+		Browser("Browser").Page("Page").Frame("ePOSTab&&0Frame").WebElement("Apply discount").HoverTap
+		Browser("Browser").Page("Page").Frame("ePOSTab&&0Frame").WebElement("Apply discount").Click
+	End  If
+		Wait 2
+		
+If Browser("Browser").Page("Page").Frame("eposTab&&0Frame").WebButton("Check out").Exist(30)Then
+		Reporter.ReportEvent micPass,"Discount applied successfully","Test Passed"
+		Else
+		Reporter.ReportEvent micFail,"Failed to apply discount","Test failed"
+	End If		
+	wait 5
 
 End Function
+
+Function EvolutionClose()
+
+	If Browser("Evolution").exist(2) Then
+		Browser("Evolution").Close
+		Reporter.ReportEvent micPass, "Evolution Closed", "Test Passed"
+		Else
+		Reporter.ReportEvent micFail, "Evolution still active", "Test Failed"
+	End  If
+	
+End Function
+
+
+'call fnCaptureApplicationDataToExcel (DataFilePath, "Order_from_NC", "78910")
+
+Function fnCaptureApplicationDataToExcel (strDataFilePath, strColName, strValue)
+	
+	intRowNum = DataTable.GetSheet("Global").GetCurrentRow
+	intColCount = DataTable.GetSheet("Global").GetParameterCount
+	' Loop to check the parameter/coulmn names
+	For i = 1 To intColCount
+		strOldColName = DataTable.GetSheet("Global").GetParameter(i).Name
+		If Trim(strOldColName) = Trim(strColName) Then
+			strMatchFound = True
+			DataTable.SetCurrentRow(intRowNum)
+			DataTable(strColName, "Global") = strValue
+		End If		
+	Next
+	' If paramter is not present in the sheet
+	If strMatchFound <> True Then
+		DataTable.GetSheet("Global").AddParameter strColName, ""
+		DataTable.SetCurrentRow(intRowNum)
+		DataTable(strColName, "Global") = strValue
+	End If
+	' Export and update the sheet to latest values
+	DataTable.ExportSheet strDataFilePath, "Global", "Sheet1"
+End Function
+
+
+
 
